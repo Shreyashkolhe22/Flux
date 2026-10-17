@@ -46,6 +46,12 @@ class _SendOverlayState extends State<SendOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    // Rebuild on every state change. The parent builds this as a const
+    // widget, so without this it would stay frozen on "Sending...".
+    return ListenableBuilder(listenable: app, builder: _build);
+  }
+
+  Widget _build(BuildContext context, Widget? _) {
     final c = FluxColors.of(context);
     final phase = app.phase;
     return Material(
