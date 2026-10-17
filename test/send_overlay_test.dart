@@ -17,18 +17,18 @@ void main() {
         builder: (_, _) => const SendOverlay(),
       ),
     ));
-    expect(find.text('SENDING...'), findsOneWidget);
+    expect(find.text('Sending...'), findsOneWidget);
 
     app.phase = Phase.sent;
-    app.phaseMessage = 'COPIED TO LAPTOP CLIPBOARD';
+    app.phaseMessage = 'Copied to laptop clipboard.';
     app.notifyListeners();
     await t.pump();
 
-    expect(find.text('SENDING...'), findsNothing);
-    expect(find.text('COPIED TO LAPTOP CLIPBOARD'), findsOneWidget);
-    expect(find.text('OK'), findsOneWidget);
+    expect(find.text('Sending...'), findsNothing);
+    expect(find.text('SENT'), findsOneWidget);
+    expect(find.text('Copied to laptop clipboard.'), findsOneWidget);
 
-    await t.tap(find.text('OK'));
+    await t.tap(find.byIcon(Icons.arrow_back));
     await t.pump();
     expect(app.phase, Phase.idle);
   });

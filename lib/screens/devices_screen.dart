@@ -4,11 +4,12 @@ import '../main.dart';
 import '../state.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
-import '../widgets/dot_text.dart';
 import 'pairing_screen.dart';
 
 class DevicesScreen extends StatelessWidget {
-  const DevicesScreen({super.key});
+  /// True when opened from Settings (shows a back arrow).
+  final bool showBack;
+  const DevicesScreen({super.key, this.showBack = false});
 
   @override
   Widget build(BuildContext context) {
@@ -18,54 +19,70 @@ class DevicesScreen extends StatelessWidget {
         listenable: app,
         builder: (context, _) {
           final p = app.pairing;
+          final checking = app.link == Link.checking;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                PageHeader(
+                  title: 'Devices',
+                  onBack: showBack ? () => Navigator.pop(context) : null,
+                ),
                 const SizedBox(height: 12),
-                const DotText('DEVICES', dot: 4),
-                const SizedBox(height: 24),
-                if (p == null)
-                  Expanded(
-                    child: Center(
-                      child: Text('NO LAPTOP PAIRED', style: label(context, size: 11)),
+                if (p == null) ...[
+                  const Spacer(),
+                  Center(
+                    child: Column(
+                      children: [
+                        DottedRing(size: 84, dots: 30, child: Icon(Icons.laptop, color: c.text, size: 32)),
+                        const SizedBox(height: 22),
+                        Text('No laptop paired', style: sans(context, size: 18)),
+                        const SizedBox(height: 10),
+                        Text('Scan the QR code to pair.', style: label(context, size: 11)),
+                      ],
                     ),
-                  )
-                else
-                  OutlineCard(
+                  ),
+                  const Spacer(),
+                  PillButton(
+                    text: 'SCAN QR CODE',
+                    icon: Icons.qr_code_scanner,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PairingScreen()),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ] else ...[
+                  SoftCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.laptop, color: c.text),
+                            const IconCircle(icon: Icons.laptop, size: 52),
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    p.name,
-                                    style: TextStyle(fontFamily: kMono, fontSize: 14, color: c.text),
-                                  ),
+                                  Text(p.name, style: sans(context, size: 15)),
                                   const SizedBox(height: 4),
-                                  Text('${p.activeIp}:${p.port}', style: label(context, size: 10)),
+                                  Text('${p.activeIp}:${p.port}', style: label(context, size: 11)),
                                 ],
                               ),
                             ),
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: switch (app.link) {
-                                  Link.connected => c.green,
-                                  Link.offline => c.red,
-                                  _ => c.textSecondary,
-                                },
+                            if (checking)
+                              const DottedRing(size: 26, dots: 14, spin: true, redArc: 2)
+                            else
+                              Container(
+                                width: 9,
+                                height: 9,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: app.link == Link.connected ? c.green : c.red,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                         const SizedBox(height: 16),
@@ -75,12 +92,15 @@ class DevicesScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: OutlinedButton(
-                                onPressed: app.refreshConnection,
+                                onPressed: checking ? null : app.refreshConnection,
                                 style: OutlinedButton.styleFrom(
                                   side: BorderSide(color: c.border),
                                   shape: const StadiumBorder(),
                                 ),
-                                child: Text('FIND AGAIN', style: label(context, color: c.text, size: 10)),
+                                child: Text(
+                                  checking ? 'SEARCHING...' : 'FIND AGAIN',
+                                  style: label(context, color: c.text, size: 11),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -91,7 +111,7 @@ class DevicesScreen extends StatelessWidget {
                                   side: BorderSide(color: c.red),
                                   shape: const StadiumBorder(),
                                 ),
-                                child: Text('FORGET', style: label(context, color: c.red, size: 10)),
+                                child: Text('FORGET', style: label(context, color: c.red, size: 11)),
                               ),
                             ),
                           ],
@@ -99,21 +119,12 @@ class DevicesScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                const SizedBox(height: 16),
-                if (p == null)
-                  OutlineButton(
-                    text: 'SCAN QR TO PAIR',
-                    icon: Icons.qr_code_scanner,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const PairingScreen()),
-                    ),
-                  )
-                else
+                  const SizedBox(height: 16),
                   Text(
                     'Laptop address changed or key reset?\nForget it, then scan the QR code again.',
-                    style: label(context, size: 10),
+                    style: label(context, size: 11),
                   ),
+                ],
               ],
             ),
           );

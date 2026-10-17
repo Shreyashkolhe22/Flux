@@ -42,7 +42,10 @@ class DotText extends StatelessWidget {
   final Color? color;
   final Color? dotColor;
 
-  const DotText(this.text, {super.key, this.dot = 4, this.color, this.dotColor});
+  /// Smaller dots, for the light wordmark in the home header.
+  final bool thin;
+
+  const DotText(this.text, {super.key, this.dot = 4, this.color, this.dotColor, this.thin = false});
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,7 @@ class DotText extends StatelessWidget {
             dot,
             color ?? c.text,
             dotColor ?? color ?? c.text,
+            thin,
           ),
         ),
       ),
@@ -74,12 +78,13 @@ class _DotTextPainter extends CustomPainter {
   final double dot;
   final Color color;
   final Color dotColor;
+  final bool thin;
 
-  _DotTextPainter(this.chars, this.dot, this.color, this.dotColor);
+  _DotTextPainter(this.chars, this.dot, this.color, this.dotColor, this.thin);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final r = dot * 0.4;
+    final r = dot * (thin ? 0.3 : 0.4);
     final p = Paint()..isAntiAlias = true;
     var x = 0;
     for (final ch in chars) {
@@ -105,5 +110,6 @@ class _DotTextPainter extends CustomPainter {
       o.chars.join() != chars.join() ||
       o.dot != dot ||
       o.color != color ||
-      o.dotColor != dotColor;
+      o.dotColor != dotColor ||
+      o.thin != thin;
 }

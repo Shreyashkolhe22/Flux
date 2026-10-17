@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 import '../theme.dart';
+import '../widgets/common.dart';
+import 'devices_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -10,74 +12,142 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = FluxColors.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: c.bg,
-        elevation: 0,
-        title: Text('Settings', style: TextStyle(fontFamily: kMono, color: c.text, fontSize: 16)),
-      ),
-      body: ListenableBuilder(
-        listenable: app,
-        builder: (context, _) {
-          final p = app.pairing;
-          return ListView(
-            padding: const EdgeInsets.all(20),
-            children: [
-              _section(context, 'APPEARANCE'),
-              _ThemeToggle(),
-              const SizedBox(height: 28),
-              _section(context, 'PAIRED DEVICE'),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.laptop, color: c.text),
-                title: Text(p?.name ?? 'None', style: TextStyle(fontFamily: kMono, color: c.text)),
-                subtitle: p == null ? null : Text(p.activeIp, style: label(context, size: 10)),
+      body: SafeArea(
+        child: ListenableBuilder(
+          listenable: app,
+          builder: (context, _) {
+            final p = app.pairing;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ListView(
+                children: [
+                  PageHeader(
+                    title: 'Settings',
+                    onBack: () => Navigator.pop(context),
+                    trailing: Padding(
+                      padding: const EdgeInsets.only(right: 14),
+                      child: Icon(Icons.settings_outlined, color: c.text, size: 22),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _section(context, 'APPEARANCE'),
+                  const _ThemeToggle(),
+                  const SizedBox(height: 22),
+                  Divider(color: c.border, height: 1),
+                  const SizedBox(height: 22),
+                  _section(context, 'PAIRED DEVICE'),
+                  _Row(
+                    icon: Icons.laptop,
+                    title: p?.name ?? 'No laptop paired',
+                    subtitle: p?.activeIp,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const Scaffold(body: DevicesScreen(showBack: true)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Divider(color: c.border, height: 1),
+                  const SizedBox(height: 22),
+                  _section(context, 'HISTORY'),
+                  _Row(
+                    icon: Icons.delete_outline,
+                    title: 'Clear History',
+                    onTap: () async {
+                      await app.clearHistory();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(content: Text('History cleared.')));
+                      }
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              _section(context, 'HISTORY'),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.delete_outline, color: c.text),
-                title: Text('Clear History', style: TextStyle(fontFamily: kMono, color: c.text)),
-                onTap: () async {
-                  await app.clearHistory();
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('History cleared.')));
-                  }
-                },
-              ),
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget _section(BuildContext context, String t) => Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Text(t, style: label(context, size: 10)),
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Text(t, style: label(context, size: 11)),
       );
 }
 
+class _Row extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final VoidCallback onTap;
+
+  const _Row({required this.icon, required this.title, this.subtitle, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = FluxColors.of(context);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          children: [
+            IconCircle(icon: icon, size: 52),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: sans(context, size: 15)),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(subtitle!, style: label(context, size: 11)),
+                  ],
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: c.text, size: 22),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _ThemeToggle extends StatelessWidget {
+  const _ThemeToggle();
+
   @override
   Widget build(BuildContext context) {
     final c = FluxColors.of(context);
     Widget seg(String text, ThemeMode m) {
       final selected = app.themeMode == m;
       return Expanded(
-        child: GestureDetector(
-          onTap: () => app.setThemeMode(m),
-          child: Container(
-            height: 40,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: selected ? c.text : Colors.transparent,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              text,
-              style: label(context, color: selected ? c.bg : c.textSecondary, size: 11),
+        child: Semantics(
+          button: true,
+          selected: selected,
+          label: text,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => app.setThemeMode(m),
+            child: Container(
+              height: 42,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: selected ? (c.isDark ? c.text : Colors.black) : Colors.transparent,
+                borderRadius: BorderRadius.circular(21),
+              ),
+              child: Text(
+                text,
+                style: sans(
+                  context,
+                  size: 13,
+                  color: selected ? (c.isDark ? Colors.black : Colors.white) : c.text,
+                ),
+              ),
             ),
           ),
         ),
@@ -86,10 +156,11 @@ class _ThemeToggle extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
+        color: c.surface,
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: c.border),
       ),
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(3),
       child: Row(
         children: [
           seg('System', ThemeMode.system),

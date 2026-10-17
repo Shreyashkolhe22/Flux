@@ -8,13 +8,15 @@ import 'screens/home_screen.dart';
 import 'screens/send_overlay.dart';
 import 'state.dart';
 import 'theme.dart';
+import 'widgets/common.dart';
 
 final app = AppState();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await app.load();
   runApp(const FluxApp());
+  // Shell shows a loading page until this finishes.
+  await app.load();
 }
 
 class FluxApp extends StatelessWidget {
@@ -91,6 +93,9 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
     return ListenableBuilder(
       listenable: app,
       builder: (context, _) {
+        if (!app.loaded) {
+          return const Scaffold(body: LoadingView(text: 'Loading...'));
+        }
         if (app.phase != Phase.idle) return const SendOverlay();
         return Scaffold(
           body: IndexedStack(
@@ -101,8 +106,9 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
               child: Container(
-                height: 60,
+                height: 64,
                 decoration: BoxDecoration(
+                  color: c.surface,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(color: c.border),
                 ),
@@ -110,14 +116,14 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
                   children: [
                     _NavItem(
                       icon: Icons.home_filled,
-                      text: 'HOME',
+                      text: 'Home',
                       selected: _tab == 0,
                       onTap: () => setState(() => _tab = 0),
                     ),
                     Container(width: 1, height: 28, color: c.border),
                     _NavItem(
                       icon: Icons.laptop,
-                      text: 'DEVICES',
+                      text: 'Devices',
                       selected: _tab == 1,
                       onTap: () => setState(() => _tab = 1),
                     ),
@@ -162,7 +168,7 @@ class _NavItem extends StatelessWidget {
             children: [
               Icon(icon, size: 20, color: color),
               const SizedBox(height: 3),
-              Text(text, style: label(context, color: color, size: 9)),
+              Text(text, style: sans(context, color: color, size: 12)),
               const SizedBox(height: 3),
               Container(
                 width: 4,

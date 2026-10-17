@@ -21,6 +21,13 @@ class AppState extends ChangeNotifier {
 
   Pairing? pairing;
   Link link = Link.unknown;
+
+  /// True once the laptop has answered in this session. Later re-checks keep
+  /// the home screen up instead of flashing the full-screen loader.
+  bool everConnected = false;
+
+  /// False until saved pairing/history are read from disk (drives the splash).
+  bool loaded = false;
   String network = 'WIFI';
   ThemeMode themeMode = ThemeMode.system;
   List<HistoryItem> history = [];
@@ -53,6 +60,7 @@ class AppState extends ChangeNotifier {
       (m) => m.name == p.getString('theme'),
       orElse: () => ThemeMode.system,
     );
+    loaded = true;
     notifyListeners();
     refreshConnection();
   }
@@ -104,6 +112,7 @@ class AppState extends ChangeNotifier {
         );
         await _savePairing();
         link = Link.connected;
+    everConnected = true;
         await _detectNetwork();
         notifyListeners();
         return true;
@@ -117,6 +126,7 @@ class AppState extends ChangeNotifier {
   Future<void> unpair() async {
     pairing = null;
     link = Link.unknown;
+    everConnected = false;
     await _savePairing();
     notifyListeners();
   }
@@ -134,6 +144,7 @@ class AppState extends ChangeNotifier {
         await _savePairing();
       }
       link = Link.connected;
+    everConnected = true;
     } else {
       link = Link.offline;
     }
@@ -214,9 +225,10 @@ class AppState extends ChangeNotifier {
         item.status = ItemStatus.sent;
         phase = Phase.sent;
         phaseMessage = item.type == ItemType.image
-            ? 'SAVED TO LAPTOP DOWNLOADS/FLUX'
-            : 'COPIED TO LAPTOP CLIPBOARD';
+            ? 'Saved to Downloads/Flux on laptop.'
+            : 'Copied to laptop clipboard.';
         link = Link.connected;
+    everConnected = true;
       case SendResult.badKey:
         _fail(item, 'Laptop key changed. Scan the QR again.');
       case SendResult.tooLarge:
@@ -225,7 +237,7 @@ class AppState extends ChangeNotifier {
         link = Link.offline;
         _fail(item, "Couldn't reach your laptop.");
       case SendResult.error:
-        _fail(item, "Couldn't send to laptop.");
+        _fail(item, "Couldn't send. Try again.");
     }
     await _saveHistory();
     _busy = false;

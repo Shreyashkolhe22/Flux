@@ -16,6 +16,7 @@ class PairingScreen extends StatefulWidget {
 class _PairingScreenState extends State<PairingScreen> {
   final _controller = MobileScannerController(formats: const [BarcodeFormat.qrCode]);
   bool _handling = false;
+  bool _verifying = false;
   String? _error;
 
   @override
@@ -38,13 +39,19 @@ class _PairingScreenState extends State<PairingScreen> {
       return;
     }
 
-    setState(() => _error = null);
+    setState(() {
+      _error = null;
+      _verifying = true;
+    });
     final ok = await app.pair(p);
     if (!mounted) return;
     if (ok) {
       Navigator.pop(context);
     } else {
-      setState(() => _error = "Found the QR but can't reach the laptop.\nSame Wi-Fi? Firewall allows port ${p.port}?");
+      setState(() {
+        _verifying = false;
+        _error = "Found the QR but can't reach the laptop.\nSame Wi-Fi? Is Flux running on it?";
+      });
       await Future<void>.delayed(const Duration(seconds: 3));
       _handling = false;
     }
@@ -54,53 +61,73 @@ class _PairingScreenState extends State<PairingScreen> {
   Widget build(BuildContext context) {
     final c = FluxColors.of(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: c.bg,
-        elevation: 0,
-        title: Text('PAIR LAPTOP', style: label(context, color: c.text, size: 13)),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                MobileScanner(
-                  controller: _controller,
-                  onDetect: _onDetect,
-                  errorBuilder: (context, error) => Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Text(
-                        error.errorCode == MobileScannerErrorCode.permissionDenied
-                            ? 'Camera permission is needed to scan the QR code.'
-                            : 'Camera unavailable.',
-                        textAlign: TextAlign.center,
-                        style: label(context, color: c.text, size: 12),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: PageHeader(title: 'Scan QR code', onBack: () => Navigator.pop(context)),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(kCardRadius),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      MobileScanner(
+                        controller: _controller,
+                        onDetect: _onDetect,
+                        placeholderBuilder: (context) => ColoredBox(
+                          color: Colors.black,
+                          child: Theme(
+                            data: buildTheme(Brightness.dark),
+                            child: const LoadingView(text: 'Starting camera...'),
+                          ),
+                        ),
+                        errorBuilder: (context, error) => ColoredBox(
+                          color: c.surface,
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(32),
+                              child: Text(
+                                error.errorCode == MobileScannerErrorCode.permissionDenied
+                                    ? 'Camera permission is needed to scan the QR code.'
+                                    : 'Camera unavailable.',
+                                textAlign: TextAlign.center,
+                                style: label(context, color: c.text, size: 12),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const Center(
+                        child: DottedRing(size: 240, dots: 60, color: Colors.white),
+                      ),
+                      if (_verifying)
+                        ColoredBox(
+                          color: Colors.black.withValues(alpha: 0.82),
+                          child: Theme(
+                            data: buildTheme(Brightness.dark),
+                            child: const LoadingView(text: 'Pairing...', sub: 'Contacting your laptop'),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-                Center(
-                  child: DottedRing(
-                    size: 240,
-                    dots: 60,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(24),
-            child: Text(
-              _error ?? 'Run the Flux server on your laptop\nand scan the QR code in its window.',
-              textAlign: TextAlign.center,
-              style: label(context, color: _error != null ? c.red : c.text, size: 11),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text(
+                _error ?? 'Open Flux on your laptop (tray icon)\nand scan the QR code.',
+                textAlign: TextAlign.center,
+                style: label(context, color: _error != null ? c.red : c.text, size: 11),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
