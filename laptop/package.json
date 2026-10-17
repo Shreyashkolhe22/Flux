@@ -1,21 +1,58 @@
 {
   "name": "flux-laptop",
   "version": "1.0.0",
-  "description": "Flux receiver: phone -> laptop local transfer",
+  "description": "Flux: receive text, links and images from your phone over the local network",
   "main": "main.js",
   "scripts": {
     "start": "node server.js",
-    "tray": "electron ."
+    "tray": "electron .",
+    "dist": "electron-builder --win --publish never"
   },
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "clipboardy": "^2.3.0",
     "express": "^4.22.3",
-    "qrcode-terminal": "^0.12.0",
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
-    "electron": "^44.8.0"
+    "electron": "^44.8.0",
+    "electron-builder": "^26.15.3",
+    "clipboardy": "^2.3.0",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "author": "Flux",
+  "build": {
+    "appId": "com.flux.receiver",
+    "productName": "Flux",
+    "copyright": "Flux",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "core.js",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Flux-Setup-${version}.exe"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": true,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "include": "build/installer.nsh",
+      "shortcutName": "Flux"
+    }
   }
 }

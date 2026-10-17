@@ -160,14 +160,20 @@ async function showQr() {
 
 function notify(item) {
   if (!Notification.isSupported()) return;
+  const preview = item.preview.replace(/\s+/g, ' ').slice(0, 100);
   const n = new Notification({
-    title: item.type === 'image' ? 'Flux: image saved' : 'Flux: copied to clipboard',
-    body: item.preview.slice(0, 120),
-    silent: true,
+    title: item.type === 'image' ? 'Received from phone: image' : `Received from phone: ${item.type}`,
+    body: item.type === 'image'
+      ? `Saved to Downloads\\Flux\\${preview}. Click to open.`
+      : `"${preview}"\nCopied. Ready to paste (Ctrl+V).`,
+    silent: false,
   });
   if (item.file) n.on('click', () => shell.showItemInFolder(item.file));
   n.show();
 }
+
+// Must match build.appId so Windows shows Flux notifications under the Flux name.
+app.setAppUserModelId('com.flux.receiver');
 
 app.on('second-instance', () => showQr());
 app.on('window-all-closed', () => {}); // keep running in the tray
@@ -205,6 +211,11 @@ app.whenReady().then(async () => {
 
   if (!readSettings().seenQr) {
     writeSettings({ seenQr: true });
+    // An installed copy should be there after every reboot; the user can untick it in the tray menu.
+    if (app.isPackaged) {
+      setOpenAtLogin(true);
+      refreshTray();
+    }
     showQr();
   }
 });
