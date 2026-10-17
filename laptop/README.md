@@ -4,9 +4,9 @@ Receives text, links and images from the Flux phone app over your local network.
 
 ## Setup (once)
 1. `npm install`
-2. Allow the port in Windows Firewall (admin PowerShell):
+2. Allow the port in Windows Firewall (admin PowerShell, only needed when running from source;
+   the installer does this for you):
    `netsh advfirewall firewall add rule name="Flux" dir=in action=allow protocol=TCP localport=3000`
-3. Set your hotspot / WiFi network profile to **Private** (Settings > Network & internet).
 
 ## Run
 - **Tray app (recommended):** `npm run tray`, or double-click `start-flux.bat`.

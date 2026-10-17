@@ -42,9 +42,10 @@ Start with Windows, Reset pairing key, Quit.
 
 ## Troubleshooting
 
-- **Phone says it can't find the laptop:** both must be on the same network. Make sure
-  the laptop's network profile is **Private** (Windows Settings, Network & internet), or
-  reinstall Flux so it re-adds its firewall rule.
+- **Phone says it can't find the laptop:** both must be on the same network, and
+  Flux must be running on the laptop (tray icon). If the firewall rule is missing, reinstall Flux
+  (or, when running from source, run the `netsh` command in `laptop/README.md` as administrator).
+  Some office and guest networks block devices from talking to each other; use your phone hotspot there.
 - **Works in the phone browser at `http://<laptop-ip>:3000/ping` but not in the app:**
   turn mobile data off on the phone and try again.
 - **Port 3000 is in use:** close the other program using it.
