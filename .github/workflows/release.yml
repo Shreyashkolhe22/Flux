@@ -39,11 +39,14 @@ jobs:
         with:
           channel: stable
       - run: flutter pub get
-      - run: flutter build apk --release
+      # One APK per CPU type keeps each download around 20-25 MB instead of 65 MB.
+      - run: flutter build apk --release --split-per-abi
       - uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
 
   release:
     needs: [windows-installer, android-apk]
@@ -57,5 +60,6 @@ jobs:
         with:
           files: |
             artifacts/Flux-Setup-*.exe
-            artifacts/app-release.apk
+            artifacts/app-arm64-v8a-release.apk
+            artifacts/app-armeabi-v7a-release.apk
           generate_release_notes: true

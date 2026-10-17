@@ -9,12 +9,12 @@ to the clipboard; images are saved to `Downloads\Flux`.
 
 ## Install
 
-Download both files from the [latest release](../../releases/latest):
+Download the files from the [latest release](../../releases/latest):
 
 | Device | File | Steps |
 |---|---|---|
 | Windows laptop | `Flux-Setup-x.y.z.exe` | Run it. It installs Flux, opens the firewall for your local network, starts with Windows, and shows a QR code. |
-| Android phone | `app-release.apk` | Open it and allow "install unknown apps" when asked. |
+| Android phone | `app-arm64-v8a-release.apk` | Open it and allow "install unknown apps" when asked. Use this one for any phone from about 2017 on. Very old 32-bit phones need `app-armeabi-v7a-release.apk` instead. |
 
 Windows may show a SmartScreen warning because the installer is not code-signed:
 click **More info**, then **Run anyway**.
@@ -82,7 +82,7 @@ npm run tray        # run the tray app without installing
 
 # Phone app
 flutter pub get
-flutter build apk --release
+flutter build apk --release --split-per-abi   # one small APK per CPU type
 ```
 
 Releases are built automatically when a tag like `v1.0.0` is pushed

@@ -55,6 +55,10 @@
       "deleteAppDataOnUninstall": false,
       "include": "build/installer.nsh",
       "shortcutName": "Flux"
-    }
+    },
+    "electronLanguages": [
+      "en-US"
+    ],
+    "compression": "maximum"
   }
 }
