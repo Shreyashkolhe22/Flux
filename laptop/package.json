@@ -32,7 +32,9 @@
     "files": [
       "main.js",
       "core.js",
-      "package.json"
+      "package.json",
+      "build/icon.png",
+      "build/tray.png"
     ],
     "win": {
       "target": [

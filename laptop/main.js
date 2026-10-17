@@ -56,6 +56,12 @@ function makeIcon() {
   return nativeImage.createFromBitmap(buf, { width: size, height: size }).resize({ width: 16, height: 16 });
 }
 
+// The Flux logo, with the drawn red dot as a fallback if the file is missing.
+function loadTrayIcon() {
+  const img = nativeImage.createFromPath(path.join(__dirname, 'build', 'tray.png'));
+  return img.isEmpty() ? makeIcon() : img.resize({ width: 16, height: 16, quality: 'best' });
+}
+
 function openAtLogin() {
   return app.getLoginItemSettings().openAtLogin;
 }
@@ -153,6 +159,7 @@ async function showQr() {
     autoHideMenuBar: true,
     title: 'Flux - pair your phone',
     backgroundColor: '#000000',
+    icon: path.join(__dirname, 'build', 'icon.png'),
     webPreferences: { sandbox: true },
   });
   qrWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);
@@ -203,7 +210,7 @@ app.whenReady().then(async () => {
     return;
   }
 
-  tray = new Tray(makeIcon());
+  tray = new Tray(loadTrayIcon());
   tray.on('click', showQr);
   refreshTray();
   // Addresses change when the network does; keep the tooltip fresh.
