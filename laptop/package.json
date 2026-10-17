@@ -1,0 +1,16 @@
+{
+  "name": "flux-laptop",
+  "version": "1.0.0",
+  "description": "Flux receiver: phone -> laptop local transfer",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "clipboardy": "^2.3.0",
+    "express": "^4.22.3",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
