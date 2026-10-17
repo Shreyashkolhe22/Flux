@@ -65,7 +65,7 @@ class _PairingScreenState extends State<PairingScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: PageHeader(title: 'Scan QR code', onBack: () => Navigator.pop(context)),
             ),
             Expanded(

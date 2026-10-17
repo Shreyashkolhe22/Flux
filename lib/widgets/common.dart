@@ -40,7 +40,8 @@ class FluxHeader extends StatelessWidget {
   }
 }
 
-/// Page header used by the full-screen states: back arrow + title.
+/// Header for every page except home: the FLUX wordmark on top (with an
+/// optional trailing action), then the back arrow and page title below it.
 class PageHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onBack;
@@ -50,23 +51,37 @@ class PageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = FluxColors.of(context);
-    return SizedBox(
-      height: 56,
-      child: Row(
-        children: [
-          if (onBack != null)
-            IconButton(
-              tooltip: 'Back',
-              onPressed: onBack,
-              icon: Icon(Icons.arrow_back, color: c.text, size: 22),
-            )
-          else
-            const SizedBox(width: 12),
-          const SizedBox(width: 4),
-          Expanded(child: Text(title, style: sans(context, size: 16))),
-          ?trailing,
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 52,
+          child: Row(
+            children: [
+              DotText('FLUX.', dot: 3.4, dotColor: c.red, thin: true),
+              const Spacer(),
+              ?trailing,
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 48,
+          child: Row(
+            children: [
+              if (onBack != null)
+                IconButton(
+                  tooltip: 'Back',
+                  onPressed: onBack,
+                  icon: Icon(Icons.arrow_back, color: c.text, size: 22),
+                )
+              else
+                const SizedBox.shrink(),
+              if (onBack != null) const SizedBox(width: 4),
+              Expanded(child: Text(title, style: sans(context, size: 16))),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

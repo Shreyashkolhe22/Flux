@@ -94,7 +94,21 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
       listenable: app,
       builder: (context, _) {
         if (!app.loaded) {
-          return const Scaffold(body: LoadingView(text: 'Loading...'));
+          return const Scaffold(
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16),
+                    FluxHeader(),
+                    Expanded(child: LoadingView(text: 'Loading...')),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
         if (app.phase != Phase.idle) return const SendOverlay();
         return Scaffold(
