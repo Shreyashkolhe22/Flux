@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flux. Send anything from your phone to your laptop</title>
+  <meta name="description" content="Flux sends text, links, images and files from your Android phone to your Windows laptop over your local network. No cloud, no account, no internet.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Flux. Local sharing, no cloud.">
+  <meta property="og:description" content="Send text, links, images and files from your phone to your laptop. Instantly, over your own network.">
+  <meta property="og:image" content="assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Mark JS as available (reveal animations) and apply the saved theme before first paint.
+    document.documentElement.classList.add('js');
+    try { var t = localStorage.getItem('flux-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav" id="top">
+    <div class="wrap nav-in">
+      <a class="brand" href="#top" aria-label="Flux, back to top"><span class="dots" data-text="FLUX." data-dot="3.2" data-thin></span></a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#setup">Setup</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="nav-right">
+        <div class="seg" role="group" aria-label="Theme">
+          <button type="button" data-set-theme="system" aria-pressed="true">System</button>
+          <button type="button" data-set-theme="light" aria-pressed="false">Light</button>
+          <button type="button" data-set-theme="dark" aria-pressed="false">Dark</button>
+        </div>
+        <a class="btn btn-red btn-sm" href="#download">Download</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">LOCAL SHARING. NO CLOUD.</p>
+        <h1 class="hero-mark reveal" aria-label="FLUX."><span class="dots dots-hero" data-text="FLUX." data-thin aria-hidden="true"></span></h1>
+        <p class="lead reveal">Copy on your phone. <strong>Paste on your laptop.</strong><br>Text, links, images and files travel straight over your own network. No account, no cloud, no internet.</p>
+        <div class="cta reveal">
+          <a class="btn btn-red" href="#download" data-dl="apk">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M17.6 9.5l1.7-3a.4.4 0 0 0-.7-.4l-1.7 3A10.3 10.3 0 0 0 12 8.2c-1.6 0-3.1.4-4.9 1l-1.7-3a.4.4 0 1 0-.7.4l1.7 3A9.6 9.6 0 0 0 2 17h20a9.6 9.6 0 0 0-4.4-7.5zM7.6 14.6a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8zm8.8 0a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8z"/></svg>
+            Android app
+          </a>
+          <a class="btn btn-line" href="#download" data-dl="exe">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3 5.5l7.5-1v7H3zm8.5-1.2L21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zm8.5 0H21V21l-9.5-1.3z"/></svg>
+            Windows installer
+          </a>
+        </div>
+        <p class="micro reveal"><span data-version>v1.0</span> · Android 7+ · Windows 10 / 11</p>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone phone-main"><img src="assets/app-home.png" alt="" width="540" height="1200"></div>
+        <div class="float float-widget"><img src="assets/widget.png" alt="" width="460" height="581"></div>
+        <div class="toast">
+          <div class="toast-ico"><img src="assets/favicon.png" alt="" width="28" height="28"></div>
+          <div class="toast-body">
+            <b>Received from phone: link</b>
+            <span>"https://github.com"</span>
+            <span class="toast-sub">Copied. Ready to paste (Ctrl+V).</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>TEXT</span><i></i><span>LINKS</span><i></i><span>IMAGES</span><i></i><span>FILES</span><i></i><span>CLIPBOARD</span><i></i><span>WIDGET</span><i></i><span>OFFLINE</span><i></i><span>PRIVATE</span><i></i>
+        <span>TEXT</span><i></i><span>LINKS</span><i></i><span>IMAGES</span><i></i><span>FILES</span><i></i><span>CLIPBOARD</span><i></i><span>WIDGET</span><i></i><span>OFFLINE</span><i></i><span>PRIVATE</span><i></i>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="section wrap" id="how">
+      <header class="sec-head reveal">
+        <p class="eyebrow">HOW IT WORKS</p>
+        <h2>Three steps. Then never again.</h2>
+        <p class="sub">Pair once with a QR code. After that, sending is a tap.</p>
+      </header>
+      <div class="steps">
+        <article class="step reveal">
+          <span class="dots num" data-text="01" data-dot="7" aria-hidden="true"></span>
+          <h3>Install</h3>
+          <p>Run the Windows installer. Install the Android app. Flux opens the firewall for your local network by itself.</p>
+        </article>
+        <article class="step reveal">
+          <span class="dots num" data-text="02" data-dot="7" aria-hidden="true"></span>
+          <h3>Pair once</h3>
+          <p>Scan the QR code shown on your laptop. A random key is saved on both devices, and nothing else needs setting up.</p>
+        </article>
+        <article class="step reveal">
+          <span class="dots num" data-text="03" data-dot="7" aria-hidden="true"></span>
+          <h3>Send</h3>
+          <p>Type, paste, share from any app, or tap the widget. Text and links land in your clipboard. Files land in a folder.</p>
+        </article>
+      </div>
+
+      <div class="flow reveal" aria-hidden="true">
+        <div class="node"><span class="ring"></span><svg viewBox="0 0 24 24" width="30" height="30"><path fill="currentColor" d="M17 1H7a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm-5 21a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm5-4H7V4h10z"/></svg><small>PHONE</small></div>
+        <div class="line"><span class="packet"></span></div>
+        <div class="node mid"><small>YOUR WI-FI<br>OR HOTSPOT</small></div>
+        <div class="line"><span class="packet p2"></span></div>
+        <div class="node"><span class="ring"></span><svg viewBox="0 0 24 24" width="30" height="30"><path fill="currentColor" d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2v8h14V7zM2 19h20v1H2z"/></svg><small>LAPTOP</small></div>
+      </div>
+      <p class="note-line reveal">Nothing leaves your network. There is no server in the middle.</p>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section wrap" id="features">
+      <header class="sec-head reveal">
+        <p class="eyebrow">FEATURES</p>
+        <h2>Small tool. Careful details.</h2>
+      </header>
+      <div class="grid">
+        <article class="card card-wide reveal">
+          <span class="ring-ico"></span>
+          <h3>Ready to paste</h3>
+          <p>Text and links go straight to your laptop clipboard and a notification says so. Press <kbd>Ctrl</kbd> + <kbd>V</kbd> anywhere.</p>
+        </article>
+        <article class="card reveal">
+          <span class="ring-ico"></span>
+          <h3>Images and files</h3>
+          <p>Photos and PDFs, documents, zips up to 100 MB. They are streamed to disk and saved in <code>Downloads\Flux</code>. Nothing is ever overwritten.</p>
+        </article>
+        <article class="card reveal">
+          <span class="ring-ico"></span>
+          <h3>Share from any app</h3>
+          <p>Flux is in the Android Share sheet. Send a link from Chrome, a photo from Gallery, a file from Files.</p>
+        </article>
+        <article class="card reveal">
+          <span class="ring-ico"></span>
+          <h3>Widget and quick tile</h3>
+          <p>Copy something, tap the home-screen widget or the pull-down tile. One tap, no app to open.</p>
+        </article>
+        <article class="card reveal">
+          <span class="ring-ico"></span>
+          <h3>Offline by design</h3>
+          <p>Works on your phone hotspot with no internet at all. Laptop off? Items wait and send themselves when it is back.</p>
+        </article>
+        <article class="card reveal">
+          <span class="ring-ico"></span>
+          <h3>Private by default</h3>
+          <p>No account to make, no analytics, no tracking. What you send stays between your two devices.</p>
+        </article>
+        <article class="card card-wide reveal">
+          <span class="ring-ico"></span>
+          <h3>Pair once, find it again</h3>
+          <p>If your laptop gets a new address, Flux searches your network and reconnects. A key from the QR code is required on every send, so other devices on the network cannot use it.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- SCREENS -->
+    <section class="section wrap" id="screens">
+      <header class="sec-head reveal">
+        <p class="eyebrow">THE APP</p>
+        <h2>Quiet. Black. Dotted.</h2>
+        <p class="sub">Dark and light themes. Everything you need on one screen.</p>
+      </header>
+      <div class="shots reveal" tabindex="0" aria-label="App screenshots, scroll sideways">
+        <figure><div class="phone"><img src="assets/app-home.png" alt="Flux home screen: connected to My Laptop, text box, image, camera and file buttons, recent items" loading="lazy" width="540" height="1200"></div><figcaption>HOME</figcaption></figure>
+        <figure><div class="phone"><img src="assets/app-sent.png" alt="Flux Sent screen with a red check" loading="lazy" width="540" height="1200"></div><figcaption>SENT</figcaption></figure>
+        <figure><div class="phone"><img src="assets/app-home-light.png" alt="Flux home screen in light mode" loading="lazy" width="540" height="1200"></div><figcaption>LIGHT MODE</figcaption></figure>
+        <figure><div class="phone"><img src="assets/app-settings.png" alt="Flux settings with theme, paired device and shortcuts" loading="lazy" width="540" height="1200"></div><figcaption>SETTINGS</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- SETUP -->
+    <section class="section wrap" id="setup">
+      <header class="sec-head reveal">
+        <p class="eyebrow">SETUP GUIDE</p>
+        <h2>From download to first send.</h2>
+        <p class="sub">About five minutes. You need a Windows laptop and an Android phone.</p>
+      </header>
+
+      <ol class="guide">
+        <li class="reveal">
+          <span class="dots gnum" data-text="1" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Install Flux on your laptop</h3>
+            <ol>
+              <li><a href="#download" data-dl="exe">Download the Windows installer</a> and double-click it.</li>
+              <li>Windows may say <b>"Windows protected your PC"</b> because the installer is not code-signed. Click <b>More info</b>, then <b>Run anyway</b>.</li>
+              <li>Click <b>Yes</b> when asked for permission. This lets Flux open one firewall port for your local network.</li>
+              <li>Flux starts, a window with a <b>QR code</b> appears, and a small Flux icon sits in the tray at the bottom right. Leave the QR window open.</li>
+            </ol>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="dots gnum" data-text="2" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Install Flux on your phone</h3>
+            <ol>
+              <li><a href="#download" data-dl="apk">Download the Android app</a> on your phone, or send the file to it.</li>
+              <li>Tap the file. If Android asks, allow <b>Install unknown apps</b> for your browser or file manager, then tap <b>Install</b>.</li>
+              <li>Open <b>Flux</b>.</li>
+            </ol>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="dots gnum" data-text="3" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Join the same network</h3>
+            <ol>
+              <li><b>Easiest:</b> turn on your phone hotspot and connect the laptop to it. It works with no internet at all.</li>
+              <li><b>Or:</b> connect both devices to the same home Wi-Fi.</li>
+            </ol>
+            <p class="callout"><b>Heads up:</b> some office, school and guest networks stop devices talking to each other. If pairing fails there, use your phone hotspot instead.</p>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="dots gnum" data-text="4" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Pair with the QR code</h3>
+            <ol>
+              <li>In the Flux app, tap <b>Scan QR code</b> and allow the camera.</li>
+              <li>Point it at the QR code on your laptop screen.</li>
+              <li>The app shows a green <b>CONNECTED</b> and your laptop's name. You only do this once.</li>
+              <li>Lost the QR window? Click the Flux icon in the laptop tray to show it again.</li>
+            </ol>
+          </div>
+        </li>
+        <li class="reveal">
+          <span class="dots gnum" data-text="5" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Send something</h3>
+            <ol>
+              <li><b>Type or paste</b> in the box and tap the red arrow.</li>
+              <li><b>Share</b> from any app: tap Share, then Flux.</li>
+              <li><b>Image</b>, <b>Camera</b> or <b>File</b>: pick it and it is sent.</li>
+              <li><b>Widget or tile:</b> in Flux open Settings, then Shortcuts, and add them. Copy anything, tap once.</li>
+            </ol>
+            <p>On the laptop you get a notification. Text and links are already in your clipboard, so just press <kbd>Ctrl</kbd> + <kbd>V</kbd>. Images and files are in <code>Downloads\Flux</code>. Click the notification to show the file.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="trouble reveal">
+        <h3>If something does not work</h3>
+        <details><summary>The phone says NO SIGNAL or cannot find the laptop</summary>
+          <p>Both devices must be on the same network and Flux must be running on the laptop (look for the tray icon). Try the phone hotspot. If you installed from source and not with the installer, the firewall rule may be missing. See the GitHub page for the one command.</p></details>
+        <details><summary>It works in my phone's browser but not in the app</summary>
+          <p>Turn mobile data off on the phone and try again. Flux sends over Wi-Fi, but some phones route oddly on a Wi-Fi without internet.</p></details>
+        <details><summary>I changed networks, or the key was reset</summary>
+          <p>In the app open <b>Devices</b>, tap <b>Forget</b>, then scan the QR code again. To get a new key on the laptop, right-click the tray icon and choose <b>Reset pairing key</b>.</p></details>
+        <details><summary>Port 3000 is in use</summary>
+          <p>Another program is using the port Flux needs. Close it and start Flux again.</p></details>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD -->
+    <section class="section wrap" id="download">
+      <header class="sec-head reveal">
+        <p class="eyebrow">DOWNLOAD</p>
+        <h2>Get Flux.</h2>
+        <p class="sub">Two small downloads. Install both, pair once.</p>
+      </header>
+      <div class="dl-grid">
+        <article class="dl reveal">
+          <div class="dl-top"><span class="ring-ico"></span><span class="tag" data-version>v1.0</span></div>
+          <h3>Android</h3>
+          <p class="dl-meta">Android 7.0 or newer · <span data-size="apk">about 25 MB</span></p>
+          <a class="btn btn-red btn-block" href="https://github.com/Shreyashkolhe22/Flux/releases/latest" data-dl="apk">Download APK</a>
+          <p class="dl-alt">Older 32-bit phone? <a href="https://github.com/Shreyashkolhe22/Flux/releases/latest" data-dl="apk32">Get the 32-bit build</a>.</p>
+        </article>
+        <article class="dl reveal">
+          <div class="dl-top"><span class="ring-ico"></span><span class="tag" data-version>v1.0</span></div>
+          <h3>Windows</h3>
+          <p class="dl-meta">Windows 10 or 11 (64-bit) · <span data-size="exe">about 100 MB</span></p>
+          <a class="btn btn-line btn-block" href="https://github.com/Shreyashkolhe22/Flux/releases/latest" data-dl="exe">Download installer</a>
+          <p class="dl-alt">Not code-signed, so Windows shows a one-time warning. Click <b>More info</b>, then <b>Run anyway</b>.</p>
+        </article>
+      </div>
+      <p class="note-line reveal"><a href="https://github.com/Shreyashkolhe22/Flux/releases" rel="noopener">All releases on GitHub</a> · <a href="https://github.com/Shreyashkolhe22/Flux" rel="noopener">Source code</a></p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section wrap" id="faq">
+      <header class="sec-head reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2>Good questions.</h2>
+      </header>
+      <div class="faq reveal">
+        <details><summary>Does Flux need the internet?</summary><p>No. Your phone talks to your laptop directly over your Wi-Fi or hotspot. Nothing goes to a server.</p></details>
+        <details><summary>Is it secure?</summary><p>Every send needs a random key from the QR code, so other devices on the network cannot use your laptop. The connection itself is not encrypted, so use Flux on a network you trust, like your own hotspot or home Wi-Fi, not on public Wi-Fi.</p></details>
+        <details><summary>Does Flux collect any data?</summary><p>No accounts, no analytics, no tracking. What you send stays between your two devices.</p></details>
+        <details><summary>Does it work on iPhone or Mac?</summary><p>Not yet. Flux is Android to Windows for now.</p></details>
+        <details><summary>What is the file size limit?</summary><p>100 MB per file. Photos are compressed to JPEG before sending.</p></details>
+        <details><summary>Where do received files go?</summary><p>Into <code>Downloads\Flux</code> on your laptop. Text and links go to the clipboard instead. Flux never opens a received file for you.</p></details>
+        <details><summary>Why does Android say "pasted from your clipboard"?</summary><p>That is Android's own privacy notice, shown whenever an app reads the clipboard. The widget and tile need to read it to send.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <span class="dots" data-text="FLUX." data-dot="3.2" data-thin aria-label="Flux"></span>
+      <p>Local sharing. No cloud.<br><small>Flux is an independent project.</small></p>
+      <nav aria-label="Footer"><a href="https://github.com/Shreyashkolhe22/Flux" rel="noopener">GitHub</a><a href="#setup">Setup</a><a href="#download">Download</a></nav>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

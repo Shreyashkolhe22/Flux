@@ -8,6 +8,10 @@ Type or share something on the phone, and your laptop shows a notification
 to the clipboard; images and files (PDFs, documents, zips, up to 100 MB) are saved to
 `Downloads\Flux`.
 
+## Website
+
+The landing page lives in [`landing/`](landing/) and deploys to Vercel as a static site (see `landing/README.md`).
+
 ## Install
 
 Download the files from the [latest release](../../releases/latest):
