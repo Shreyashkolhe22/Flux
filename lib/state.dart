@@ -88,6 +88,27 @@ class AppState extends ChangeNotifier {
     super.dispose();
   }
 
+  /// Re-reads pairing and history from disk. The widget and the quick-settings tile
+  /// (native code) write to the same saved data while the app is in the background.
+  Future<void> reloadFromDisk() async {
+    final p = _prefs;
+    if (p == null || _busy || _flushing) return;
+    await p.reload();
+    final pj = p.getString('pairing');
+    if (pj != null) {
+      try {
+        pairing = Pairing.fromJson(jsonDecode(pj) as Map<String, dynamic>);
+      } catch (_) {}
+    }
+    final hj = p.getString('history');
+    if (hj != null) {
+      try {
+        history = HistoryItem.decodeList(hj);
+      } catch (_) {}
+    }
+    notifyListeners();
+  }
+
   // ---- persistence ------------------------------------------------------
 
   Future<void> _savePairing() async {

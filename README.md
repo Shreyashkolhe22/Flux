@@ -35,6 +35,10 @@ After that it stays paired. If the laptop's address changes, the app finds it ag
 - Or, in any app (Chrome, Gallery, Notes), tap **Share**, then **Flux**.
 - Pick a photo with **Image**, take one with **Camera**, or send any file (PDF, document, zip) with **File**.
   You can also share files from any app. Files up to 100 MB; a file with the same name is never overwritten.
+- **One-tap clipboard send:** copy something in any app, then tap the Flux **home-screen widget**
+  or the **Send clipboard** tile in the pull-down panel. In Flux, open Settings, then Shortcuts, to add
+  either one. Android shows a small "pasted from your clipboard" notice when this happens; that is
+  Android's own privacy message. Widget and tile send text and links.
 - Failed sends stay in Recent. Tap one to retry.
 
 ## Tray menu (laptop)

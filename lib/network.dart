@@ -20,3 +20,22 @@ class WifiBinder {
     }
   }
 }
+
+/// Asks Android to add the Flux widget or quick-settings tile (Android only).
+class LauncherShortcuts {
+  static const _channel = MethodChannel('flux/network');
+
+  /// "requested" (the launcher shows its own add dialog), "unsupported" or "manual".
+  static Future<String> pinWidget() => _call('pinWidget');
+
+  static Future<String> addTile() => _call('addTile');
+
+  static Future<String> _call(String method) async {
+    if (!Platform.isAndroid) return 'unsupported';
+    try {
+      return await _channel.invokeMethod<String>(method) ?? 'unsupported';
+    } catch (_) {
+      return 'unsupported';
+    }
+  }
+}

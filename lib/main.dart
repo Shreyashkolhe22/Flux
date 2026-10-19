@@ -67,7 +67,9 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && app.phase == Phase.idle) {
-      app.refreshConnection();
+      // The widget and quick-settings tile add items to the saved history while
+      // the app is closed, so read it again before checking the laptop.
+      app.reloadFromDisk().then((_) => app.refreshConnection());
     }
   }
 
