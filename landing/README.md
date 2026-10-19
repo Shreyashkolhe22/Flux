@@ -6,7 +6,7 @@ A static site (plain HTML, CSS and JS, no build step) for the Flux app.
 landing/
   index.html     content and structure
   styles.css     theme tokens (same black / white / red as the app), layout, light + dark
-  main.js        dot-matrix lettering, theme switch, scroll reveal, live download links
+  main.js        dot lettering, copy/send/paste scene, sticky phone, theme, live download links
   assets/        app screenshots, widget, logo, favicon, social image
   vercel.json    caching and security headers
 ```
@@ -53,8 +53,9 @@ to your full address, for example `https://your-site.vercel.app/assets/og.png`, 
 
 ## Design notes
 
-- Fonts: Inter and Geist Mono from Google Fonts (both open-licensed).
-- The dot-matrix lettering is drawn in the browser from a 5 by 7 glyph table, the same one the app uses,
-  so there is no font file for it.
-- Respects the visitor's light or dark setting, with a System / Light / Dark switch.
-- Honours "reduce motion".
+- Flat black or off-white with hairlines, one red accent, very little decoration.
+- Fonts: Doto (round-dot dot-matrix, for headings), Inter and Geist Mono, all open-licensed, from Google Fonts.
+- The big FLUX lettering is drawn in the browser from the same 5 by 7 glyph table the app uses.
+- The copy / send / paste animation in section 01 is a small SVG timeline in `main.js`.
+- The phone in section 02 is sticky and changes screen as you scroll the feature list.
+- Respects the visitor's light or dark setting, with an AUTO / LIGHT / DARK button, and honours "reduce motion".
