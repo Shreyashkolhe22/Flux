@@ -1,10 +1,15 @@
 name: Release
 
-# Push a tag like v1.0.0 to build the Windows installer and the Android APK
-# and attach both to a GitHub Release.
+# Manual only: Actions tab, "Release", Run workflow, and give a tag such as v1.0.1.
+# It builds the Windows installer and the Android APKs on GitHub's servers and
+# attaches them to that release. (It is not triggered by tags, so releases made by
+# hand on the Releases page do not start a second build.)
 on:
-  push:
-    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, for example v1.0.1
+        required: true
 
 permissions:
   contents: write
@@ -58,6 +63,7 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.tag }}
           files: |
             artifacts/Flux-Setup-*.exe
             artifacts/app-arm64-v8a-release.apk

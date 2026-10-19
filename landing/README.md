@@ -33,9 +33,9 @@ Every push to `main` then redeploys the site.
 
 The buttons read the **latest GitHub release** of `Shreyashkolhe22/Flux` in the browser and point to its
 `.exe` and `.apk` files, and show the version and file sizes. Until a release exists they link to the
-releases page instead. To publish one, push a tag such as `v1.0.0` (the workflow in
-`.github/workflows/release.yml` builds the installer and the APKs), or create a release by hand and
-attach `Flux-Setup-x.y.z.exe`, `app-arm64-v8a-release.apk` and `app-armeabi-v7a-release.apk`.
+releases page instead. To publish one, create a release on the Releases page and attach `Flux-Setup-x.y.z.exe`,
+`Flux-x.y.z-arm64-v8a.apk` and `Flux-x.y.z-armeabi-v7a.apk` (or run the manual workflow in
+`.github/workflows/release.yml`).
 The file names only need to contain `.exe`, `arm64` + `.apk`, and `armeabi` + `.apk`.
 
 If the repository is renamed or moved, change `REPO` at the top of `main.js` and the GitHub links in `index.html`.

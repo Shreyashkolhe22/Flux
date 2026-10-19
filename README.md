@@ -95,5 +95,5 @@ flutter pub get
 flutter build apk --release --split-per-abi   # one small APK per CPU type
 ```
 
-Releases are built automatically when a tag like `v1.0.0` is pushed
-(see `.github/workflows/release.yml`).
+Releases are published on the GitHub Releases page: attach `Flux-Setup-x.y.z.exe` and the two APKs.
+The workflow in `.github/workflows/release.yml` can also build them on GitHub (Actions, Release, Run workflow).

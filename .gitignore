@@ -49,3 +49,6 @@ app.*.map.json
 
 # Gradle reports
 android/build/
+
+# Release files (upload to GitHub Releases, never commit)
+/release/
