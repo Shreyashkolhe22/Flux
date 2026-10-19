@@ -16,7 +16,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>
     // Mark JS as available (reveal animations) and apply the saved theme before first paint.
@@ -303,14 +303,38 @@
     </section>
   </main>
 
-  <footer class="foot">
-    <div class="wrap foot-in">
-      <span class="dots" data-text="FLUX." data-dot="3.2" data-thin aria-label="Flux"></span>
-      <p>Local sharing. No cloud.<br><small>Flux is an independent project.</small></p>
-      <nav aria-label="Footer"><a href="https://github.com/Shreyashkolhe22/Flux" rel="noopener">GitHub</a><a href="#setup">Setup</a><a href="#download">Download</a></nav>
+  <footer class="hwf" id="footer">
+    <canvas aria-hidden="true"></canvas>
+    <span class="hwf-sr">Flux</span>
+    <div class="hwf-top">
+      <div class="hwf-brand">
+        <strong>Flux</strong>
+        <span>©2026 · Local sharing. No cloud.</span>
+      </div>
+      <nav class="hwf-col" aria-label="Product">
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#setup">Setup</a></li>
+          <li><a href="#download">Download</a></li>
+          <li><a href="#faq">Questions</a></li>
+        </ul>
+      </nav>
+      <nav class="hwf-col" aria-label="Project">
+        <h3>Project</h3>
+        <ul>
+          <li><a href="https://github.com/Shreyashkolhe22/Flux" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/Shreyashkolhe22/Flux/releases" rel="noopener">Releases</a></li>
+          <li><a href="https://github.com/Shreyashkolhe22/Flux/issues" rel="noopener">Report an issue</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="hwf-rule">
+      <button type="button" class="hwf-up">Back to top ↑</button>
     </div>
   </footer>
 
   <script src="main.js" defer></script>
+  <script src="footer.js" defer></script>
 </body>
 </html>

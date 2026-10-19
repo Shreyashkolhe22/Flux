@@ -7,6 +7,7 @@ landing/
   index.html     content and structure
   styles.css     theme tokens (same black / white / red as the app), layout, light + dark
   main.js        dot-matrix lettering, theme switch, scroll reveal, live download links
+  footer.js     halftone wordmark footer (giant dotted word that the pointer parts)
   assets/        app screenshots, widget, logo, favicon, social image
   vercel.json    caching and security headers
 ```
@@ -58,3 +59,6 @@ to your full address, for example `https://your-site.vercel.app/assets/og.png`, 
   so there is no font file for it.
 - Respects the visitor's light or dark setting, with a System / Light / Dark switch.
 - Honours "reduce motion".
+- The footer prints the word `flux.` as halftone dots (`footer.js`). Move the pointer over it and the dots part and warm in
+  colour; click to send a ring through the word. Settings (word, dot gap, push radius, crop, grain) are at the top of the file.
+  Links and text are plain HTML in the `<footer id="footer">` block of `index.html`.

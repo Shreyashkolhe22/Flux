@@ -184,15 +184,21 @@ details p { margin: 0 0 22px; color: var(--muted); max-width: 52em; }
 .dl-alt a { color: var(--text); text-underline-offset: 3px; }
 .tag { font: 400 11px var(--mono); letter-spacing: 0.1em; border: 1px solid var(--border); padding: 5px 12px; border-radius: 999px; color: var(--muted); }
 
-/* footer */
-.foot { margin-top: 120px; border-top: 1px dashed var(--border); padding: 44px 0 56px; }
-.foot-in { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-.foot .dots { width: 92px; }
-.foot p { margin: 0; color: var(--muted); font: 400 12px var(--mono); letter-spacing: 0.08em; }
-.foot small { font-size: 11px; opacity: 0.8; }
-.foot nav { display: flex; gap: 22px; font: 400 12px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
-.foot nav a { text-decoration: none; color: var(--muted); }
-.foot nav a:hover { color: var(--text); }
+/* footer: halftone wordmark (footer.js draws the dots) */
+.hwf { position: relative; width: 100%; height: clamp(500px, 44vw, 640px); margin-top: 140px; overflow: hidden; isolation: isolate; background: var(--bg); color: var(--text); border-top: 1px dashed var(--border); }
+.hwf canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; max-width: none; }
+.hwf-top { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr)); gap: 24px; padding: clamp(22px, 3.4vw, 40px) clamp(20px, 3.4vw, 44px) 0; font: 400 10.5px/1.75 var(--mono); letter-spacing: .18em; text-transform: uppercase; }
+.hwf-brand strong { display: block; font-weight: 500; }
+.hwf-brand span { opacity: .45; }
+.hwf-col h3 { margin: 0; font: inherit; opacity: .4; font-weight: 500; }
+.hwf-col ul { list-style: none; margin: 0; padding: 0; }
+.hwf-col a, .hwf-up { color: inherit; text-decoration: none; opacity: .78; background: none; border: 0; padding: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; background-image: linear-gradient(currentColor, currentColor); background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%; transition: opacity .25s ease, background-size .35s cubic-bezier(.2,.7,.1,1); }
+.hwf-col a:hover, .hwf-up:hover { opacity: 1; background-size: 100% 1px; }
+.hwf-col a:focus-visible, .hwf-up:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; opacity: 1; }
+.hwf-rule { position: relative; z-index: 1; display: flex; justify-content: flex-end; align-items: center; margin: clamp(18px, 2.6vw, 30px) clamp(20px, 3.4vw, 44px) 0; padding-top: 12px; border-top: 1px solid var(--border); font: 400 10.5px var(--mono); letter-spacing: .18em; text-transform: uppercase; }
+.hwf-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 720px) { .hwf { height: 460px; } .hwf-top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); row-gap: 18px; } .hwf-brand { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: reduce) { .hwf-col a, .hwf-up { transition: none; } }
 
 /* reveal on scroll (only when JS is on, so content is never hidden without it) */
 .js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .8s cubic-bezier(.2, .7, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1); }
