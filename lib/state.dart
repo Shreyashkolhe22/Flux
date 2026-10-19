@@ -45,6 +45,13 @@ class AppState extends ChangeNotifier {
   HistoryItem? _current;
   bool fromShare = false;
 
+  /// Upload progress (0 to 1) while a file is being sent, otherwise null.
+  double? progress;
+  int _lastProgressTick = 0;
+
+  /// Largest file the app will send. The laptop accepts up to 100 MB.
+  static int maxFileBytes = 100 * 1024 * 1024;
+
   bool _busy = false;
   bool _flushing = false;
   int _ticks = 0;
@@ -208,6 +215,18 @@ class AppState extends ChangeNotifier {
     ), share: share);
   }
 
+  /// Sends any file (PDF, document, zip, ...). [name] is the original filename
+  /// when the path is a cached copy with a different name.
+  Future<void> sendFile(String path, {String? name, bool share = false}) async {
+    await _sendNew(HistoryItem(
+      id: _uuid.v4(),
+      type: ItemType.file,
+      data: path,
+      label: name ?? path.split(RegExp(r'[\\/]')).last,
+      ts: DateTime.now().millisecondsSinceEpoch,
+    ), share: share);
+  }
+
   Future<void> retry(HistoryItem item) async {
     if (_busy) return;
     await _deliver(item, share: false);
@@ -226,6 +245,7 @@ class AppState extends ChangeNotifier {
     fromShare = share;
     phase = Phase.sending;
     phaseLabel = item.label;
+    progress = null;
     item.status = ItemStatus.pending;
     notifyListeners();
 
@@ -238,11 +258,12 @@ class AppState extends ChangeNotifier {
     }
 
     final result = await _attempt(item);
+    progress = null;
     switch (result) {
       case SendResult.ok:
         item.status = ItemStatus.sent;
         phase = Phase.sent;
-        phaseMessage = item.type == ItemType.image
+        phaseMessage = item.type == ItemType.image || item.type == ItemType.file
             ? 'Saved to Downloads/Flux on laptop.'
             : 'Copied to laptop clipboard.';
         item.auto = false;
@@ -253,7 +274,9 @@ class AppState extends ChangeNotifier {
         _fail(item, 'Laptop key changed. Scan the QR again.');
       case SendResult.tooLarge:
         item.auto = false;
-        _fail(item, 'File is too large to send.');
+        _fail(item, item.type == ItemType.file
+            ? 'File is too large (max ${maxFileBytes ~/ (1024 * 1024)} MB).'
+            : 'Image is too large to send.');
       case SendResult.unreachable:
         // Keep it and send it by itself when the laptop is back.
         item.auto = true;
@@ -277,6 +300,8 @@ class AppState extends ChangeNotifier {
 
   Future<SendResult> _attempt(HistoryItem item) async {
     var p = pairing!;
+
+    if (item.type == ItemType.file) return _attemptFile(item);
 
     String data;
     String? mime;
@@ -374,6 +399,43 @@ class AppState extends ChangeNotifier {
     } finally {
       _flushing = false;
       await _saveHistory();
+      notifyListeners();
+    }
+  }
+
+  Future<SendResult> _attemptFile(HistoryItem item) async {
+    var p = pairing!;
+    final file = File(item.data);
+    if (!file.existsSync()) return SendResult.error; // cached copy was cleared
+    final size = await file.length();
+    if (size > maxFileBytes) return SendResult.tooLarge;
+
+    Future<SendResult> go() => FluxApi.sendFile(
+          p,
+          id: item.id,
+          path: item.data,
+          name: item.label,
+          onProgress: _onProgress,
+        );
+
+    var r = await go();
+    if (r == SendResult.unreachable) {
+      final ip = await FluxApi.discover(p);
+      if (ip != null) {
+        p = pairing = p.withIp(ip);
+        await _savePairing();
+        r = await go();
+      }
+    }
+    return r;
+  }
+
+  /// Progress updates arrive per chunk; repaint at most ~10 times a second.
+  void _onProgress(double value) {
+    progress = value;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (value >= 1 || now - _lastProgressTick >= 100) {
+      _lastProgressTick = now;
       notifyListeners();
     }
   }

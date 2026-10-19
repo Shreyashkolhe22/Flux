@@ -1,42 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flux/models.dart';
 import 'package:flux/state.dart';
 
-/// A tiny stand-in for the laptop: records what it receives.
-class FakeLaptop {
-  late final HttpServer server;
-  final received = <Map<String, dynamic>>[];
-  int sendStatus = 200;
-
-  Future<void> start() async {
-    server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-    server.listen((req) async {
-      if (req.uri.path == '/ping') {
-        req.response.write(jsonEncode({'app': 'flux', 'name': 'TEST-LAPTOP'}));
-      } else if (req.uri.path == '/send') {
-        final body = jsonDecode(await utf8.decodeStream(req)) as Map<String, dynamic>;
-        if (req.headers.value('X-Key') != 'secret') {
-          req.response.statusCode = 401;
-        } else {
-          req.response.statusCode = sendStatus;
-          if (sendStatus == 200) received.add(body);
-        }
-      }
-      await req.response.close();
-    });
-  }
-
-  Pairing pairing() => Pairing(
-        name: 'TEST-LAPTOP',
-        ips: ['127.0.0.1'],
-        port: server.port,
-        key: 'secret',
-        activeIp: '127.0.0.1',
-      );
-}
+import 'fake_laptop.dart';
 
 HistoryItem failed(String id, String text,
         {bool auto = true, Duration age = const Duration(minutes: 5)}) =>
@@ -106,13 +74,7 @@ void main() {
   });
 
   test('a changed key is not retried forever', () async {
-    state.pairing = Pairing(
-      name: 'TEST-LAPTOP',
-      ips: ['127.0.0.1'],
-      port: laptop.server.port,
-      key: 'wrong',
-      activeIp: '127.0.0.1',
-    );
+    state.pairing = laptop.pairing(key: 'wrong');
     state.history = [failed('x', 'hello')];
 
     await state.flushQueue();

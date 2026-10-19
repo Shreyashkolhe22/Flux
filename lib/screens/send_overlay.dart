@@ -95,7 +95,12 @@ class _SendOverlayState extends State<SendOverlay> {
   Widget _content(BuildContext context, Phase phase, FluxColors c) {
     switch (phase) {
       case Phase.sending:
-        return LoadingView(text: 'Sending...', sub: app.phaseLabel, size: 104);
+        final pct = app.progress;
+        return LoadingView(
+          text: pct == null ? 'Sending...' : 'Sending... ${(pct * 100).floor()}%',
+          sub: app.phaseLabel,
+          size: 104,
+        );
       case Phase.sent:
         return _result(
           context,

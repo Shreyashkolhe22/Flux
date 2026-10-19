@@ -81,8 +81,9 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
           await app.sendText(f.path, share: true);
         case SharedMediaType.image:
           await app.sendImage(f.path, share: true);
-        default:
-          break; // video/files are not supported in v1
+        case SharedMediaType.file:
+        case SharedMediaType.video:
+          await app.sendFile(f.path, share: true);
       }
     }
   }

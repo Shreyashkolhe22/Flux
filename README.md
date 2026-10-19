@@ -5,7 +5,8 @@ Local network only. No cloud, no account, no internet needed.
 
 Type or share something on the phone, and your laptop shows a notification
 **"Received from phone. Copied. Ready to paste (Ctrl+V)."** Text and links go straight
-to the clipboard; images are saved to `Downloads\Flux`.
+to the clipboard; images and files (PDFs, documents, zips, up to 100 MB) are saved to
+`Downloads\Flux`.
 
 ## Install
 
@@ -32,12 +33,13 @@ After that it stays paired. If the laptop's address changes, the app finds it ag
 
 - Type or paste in the app and tap the red arrow.
 - Or, in any app (Chrome, Gallery, Notes), tap **Share**, then **Flux**.
-- Pick a photo with **Image**, or take one with **Camera**.
+- Pick a photo with **Image**, take one with **Camera**, or send any file (PDF, document, zip) with **File**.
+  You can also share files from any app. Files up to 100 MB; a file with the same name is never overwritten.
 - Failed sends stay in Recent. Tap one to retry.
 
 ## Tray menu (laptop)
 
-Show QR to pair, History (click an item to copy it again), Open images folder,
+Show QR to pair, History (click an item to copy it again or show a file in its folder), Open received files folder,
 Start with Windows, Reset pairing key, Quit.
 
 ## Troubleshooting

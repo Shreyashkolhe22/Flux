@@ -85,7 +85,7 @@ function ago(ts) {
 function buildMenu() {
   const items = history.length
     ? history.map((h) => ({
-        label: `${h.type === 'image' ? '[img] ' : ''}${h.preview.replace(/\s+/g, ' ').slice(0, 40)}  (${ago(h.at)})`,
+        label: `${h.file ? (h.type === 'image' ? '[img] ' : '[file] ') : ''}${h.preview.replace(/\s+/g, ' ').slice(0, 40)}  (${ago(h.at)})`,
         click: () => {
           if (h.file) shell.showItemInFolder(h.file);
           else clipboard.writeText(h.full);
@@ -96,7 +96,7 @@ function buildMenu() {
   return Menu.buildFromTemplate([
     { label: 'Show QR to pair', click: showQr },
     { label: 'History (click to copy / open)', submenu: items },
-    { label: 'Open images folder', click: () => { fs.mkdirSync(flux.saveDir, { recursive: true }); shell.openPath(flux.saveDir); } },
+    { label: 'Open received files folder', click: () => { fs.mkdirSync(flux.saveDir, { recursive: true }); shell.openPath(flux.saveDir); } },
     { type: 'separator' },
     {
       label: 'Start with Windows',
@@ -169,9 +169,9 @@ function notify(item) {
   if (!Notification.isSupported()) return;
   const preview = item.preview.replace(/\s+/g, ' ').slice(0, 100);
   const n = new Notification({
-    title: item.type === 'image' ? 'Received from phone: image' : `Received from phone: ${item.type}`,
-    body: item.type === 'image'
-      ? `Saved to Downloads\\Flux\\${preview}. Click to open.`
+    title: `Received from phone: ${item.type}`,
+    body: item.file
+      ? `Saved to Downloads\\Flux\\${preview}. Click to show in folder.`
       : `"${preview}"\nCopied. Ready to paste (Ctrl+V).`,
     silent: false,
   });

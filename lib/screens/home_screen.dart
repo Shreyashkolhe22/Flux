@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../main.dart';
@@ -43,6 +44,22 @@ class _HomeScreenState extends State<HomeScreen> {
     FocusScope.of(context).unfocus();
     _text.clear();
     await app.sendText(t);
+  }
+
+  /// Pick one or more files of any type and send them one after another.
+  Future<void> _pickFiles() async {
+    try {
+      final files = await FilePicker.pickFiles();
+      for (final f in files) {
+        final path = f.path;
+        if (path != null) await app.sendFile(path, name: f.name);
+      }
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open the file picker.')),
+      );
+    }
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -298,10 +315,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     text: 'CAMERA',
                     onTap: () => _pickImage(ImageSource.camera),
                   ),
-                  const CircleAction(
+                  CircleAction(
                     icon: Icons.description_outlined,
                     text: 'FILE',
-                    sub: '(soon)',
+                    onTap: _pickFiles,
                   ),
                 ],
               ),
@@ -405,13 +422,20 @@ class _RecentTile extends StatelessWidget {
         ),
       );
     } else {
+      final ext = item.label.contains('.') ? item.label.split('.').last.toLowerCase() : '';
+      final isPdf = item.type == ItemType.file && ext == 'pdf';
       leading = IconCircle(
         size: 50,
+        color: isPdf ? c.red : null,
         icon: isImage
             ? Icons.image_outlined
             : item.type == ItemType.link
                 ? Icons.link
-                : Icons.description_outlined,
+                : isPdf
+                    ? Icons.picture_as_pdf
+                    : item.type == ItemType.file && const {'zip', 'rar', '7z', 'tar', 'gz'}.contains(ext)
+                        ? Icons.folder_zip_outlined
+                        : Icons.description_outlined,
       );
     }
 

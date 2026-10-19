@@ -7,6 +7,7 @@ const os = require('os');
 const path = require('path');
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_FILE_BYTES = 100 * 1024 * 1024;
 const IMAGE_TYPES = {
   'image/jpeg': { ext: 'jpg', magic: [0xff, 0xd8, 0xff] },
   'image/png': { ext: 'png', magic: [0x89, 0x50, 0x4e, 0x47] },
@@ -27,6 +28,30 @@ function lanAddresses() {
   return out;
 }
 
+// Makes a received filename safe to write on Windows: no path parts, no reserved
+// characters or device names, bounded length. Always returns a usable name.
+function safeName(raw) {
+  let name = String(raw || '').replace(/[\\/]+/g, '/').split('/').pop();
+  name = name.replace(/[\x00-\x1f<>:"|?*]/g, '_').replace(/^[ .]+|[ .]+$/g, '');
+  if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i.test(name)) name = '_' + name;
+  if (name.length > 120) {
+    const ext = path.extname(name).slice(0, 20);
+    name = name.slice(0, 120 - ext.length) + ext;
+  }
+  return name || 'file';
+}
+
+// name.ext -> name (1).ext -> name (2).ext ... so nothing is ever overwritten.
+function uniquePath(dir, name) {
+  const ext = path.extname(name);
+  const base = name.slice(0, name.length - ext.length);
+  let candidate = path.join(dir, name);
+  for (let i = 1; fs.existsSync(candidate) || fs.existsSync(candidate + '.part'); i++) {
+    candidate = path.join(dir, `${base} (${i})${ext}`);
+  }
+  return candidate;
+}
+
 function keyOk(provided, expected) {
   const a = Buffer.from(String(provided || ''));
   const b = Buffer.from(expected);
@@ -45,6 +70,7 @@ function keyOk(provided, expected) {
 function createFlux(opts) {
   const port = opts.port || Number(process.env.FLUX_PORT) || 3000;
   const saveDir = opts.saveDir || path.join(os.homedir(), 'Downloads', 'Flux');
+  const maxFileBytes = opts.maxFileBytes || MAX_FILE_BYTES;
   const configPath = path.join(opts.configDir, 'config.json');
   const log = opts.log || ((m) => console.log(`[${new Date().toLocaleTimeString()}] ${m}`));
 
@@ -129,6 +155,93 @@ function createFlux(opts) {
     }
   });
 
+  // Files are streamed straight to disk (raw body), so large files do not sit in memory.
+  // Headers: X-Key, X-Id, X-Name (URL-encoded filename), Content-Length.
+  app.post('/file', (req, res) => {
+    const src = req.socket.remoteAddress;
+    const reject = (status, error) => {
+      if (!res.headersSent) res.status(status).set('Connection', 'close').json({ error });
+      req.resume();
+    };
+    if (!keyOk(req.get('X-Key'), config.key)) {
+      log(`REJECTED (bad key) from ${src}`);
+      return reject(401, 'bad key');
+    }
+    const id = String(req.get('X-Id') || '');
+    const length = Number(req.get('Content-Length'));
+    if (!id || id.length > 100 || !Number.isInteger(length) || length <= 0) {
+      return reject(400, 'bad payload');
+    }
+    if (length > maxFileBytes) return reject(413, 'file too large');
+    if (seen.has(id)) {
+      req.resume();
+      return res.json({ ok: true, duplicate: true });
+    }
+
+    let decoded = '';
+    try { decoded = decodeURIComponent(String(req.get('X-Name') || '')); } catch (_) {}
+    const name = safeName(decoded);
+
+    let finalPath, partPath, out;
+    try {
+      fs.mkdirSync(saveDir, { recursive: true });
+      finalPath = uniquePath(saveDir, name);
+      partPath = finalPath + '.part';
+      out = fs.createWriteStream(partPath);
+    } catch (e) {
+      log(`ERROR: ${e.message}`);
+      return reject(500, 'failed to handle item');
+    }
+
+    let received = 0;
+    let done = false;
+    const cleanup = () => {
+      done = true;
+      out.destroy();
+      fs.unlink(partPath, () => {});
+    };
+
+    req.on('data', (chunk) => {
+      received += chunk.length;
+      if (!done && received > maxFileBytes) {
+        cleanup();
+        reject(413, 'file too large');
+      }
+    });
+    req.pipe(out);
+    // Client went away mid-upload: drop the partial file.
+    res.on('close', () => { if (!done && !res.writableFinished) cleanup(); });
+    out.on('error', (e) => {
+      if (done) return;
+      log(`ERROR: ${e.message}`);
+      cleanup();
+      reject(500, 'failed to handle item');
+    });
+    out.on('finish', () => {
+      if (done) return;
+      if (received !== length) {
+        cleanup();
+        return reject(400, 'incomplete upload');
+      }
+      try {
+        fs.renameSync(partPath, finalPath);
+      } catch (e) {
+        log(`ERROR: ${e.message}`);
+        cleanup();
+        return reject(500, 'failed to handle item');
+      }
+      done = true;
+      seen.add(id);
+      seenOrder.push(id);
+      if (seenOrder.length > 100) seen.delete(seenOrder.shift());
+      log(`OK from ${src}: file saved -> ${finalPath} (${received} bytes)`);
+      if (opts.onItem) {
+        opts.onItem({ type: 'file', preview: path.basename(finalPath), file: finalPath, at: Date.now() });
+      }
+      res.json({ ok: true });
+    });
+  });
+
   // Payload too large / malformed JSON.
   app.use((err, _req, res, _next) => {
     if (err.type === 'entity.too.large') return res.status(413).json({ error: 'too large' });
@@ -156,4 +269,4 @@ function createFlux(opts) {
   };
 }
 
-module.exports = { createFlux, lanAddresses };
+module.exports = { createFlux, lanAddresses, safeName };

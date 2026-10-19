@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "tray": "electron .",
-    "dist": "electron-builder --win --publish never"
+    "dist": "electron-builder --win --publish never",
+    "test": "node --test test/core.test.js"
   },
   "license": "UNLICENSED",
   "private": true,

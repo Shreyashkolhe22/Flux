@@ -72,6 +72,77 @@ class FluxApi {
     }
   }
 
+  /// Streams a file from disk to the laptop (raw body, no base64), reporting
+  /// progress from 0 to 1. A tiny authenticated request goes first, so a wrong key
+  /// or an unreachable laptop fails in milliseconds instead of after a big upload.
+  static Future<SendResult> sendFile(
+    Pairing p, {
+    required String id,
+    required String path,
+    required String name,
+    void Function(double progress)? onProgress,
+  }) async {
+    await WifiBinder.bind();
+    final uri = Uri.parse('http://${p.activeIp}:${p.port}/file');
+    final headers = {
+      'X-Key': p.key,
+      'X-Id': id,
+      // Header values must be ASCII, so the name travels URL-encoded.
+      'X-Name': Uri.encodeComponent(name),
+    };
+
+    final int length;
+    try {
+      length = await File(path).length();
+    } catch (_) {
+      return SendResult.error;
+    }
+    if (length <= 0) return SendResult.error;
+
+    final client = http.Client();
+    try {
+      // Preflight: empty body. The laptop checks the key first (401), then rejects
+      // the empty body (400), so 400 here means "key accepted, go ahead".
+      final pre = await client.post(uri, headers: headers).timeout(_sendTimeout);
+      if (pre.statusCode == 401) return SendResult.badKey;
+
+      final req = http.StreamedRequest('POST', uri)
+        ..contentLength = length
+        ..headers.addAll({...headers, 'Content-Type': 'application/octet-stream'});
+      var sent = 0;
+      final upload = File(path).openRead().map((chunk) {
+        sent += chunk.length;
+        onProgress?.call(sent / length);
+        return chunk;
+      });
+      unawaited(
+        req.sink.addStream(upload).then((_) => req.sink.close()).catchError((_) {}),
+      );
+
+      // Allow time for slow Wi-Fi: 30 s plus 1 s per 100 KB.
+      final res = await client
+          .send(req)
+          .timeout(Duration(seconds: 30 + length ~/ 100000));
+      await res.stream.drain<void>();
+      return switch (res.statusCode) {
+        200 => SendResult.ok,
+        401 => SendResult.badKey,
+        413 => SendResult.tooLarge,
+        _ => SendResult.error,
+      };
+    } on SocketException {
+      return SendResult.unreachable;
+    } on TimeoutException {
+      return SendResult.unreachable;
+    } on http.ClientException {
+      return SendResult.unreachable;
+    } catch (_) {
+      return SendResult.error;
+    } finally {
+      client.close();
+    }
+  }
+
   /// The phone's own private IPv4 addresses (skips mobile-data interfaces).
   static Future<List<({String name, String ip})>> localAddresses() async {
     final out = <({String name, String ip})>[];

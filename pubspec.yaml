@@ -41,6 +41,7 @@ dependencies:
   image_picker: ^1.2.4
   flutter_image_compress: ^2.5.1
   uuid: ^4.6.0
+  file_picker: ^13.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-enum ItemType { text, link, image }
+enum ItemType { text, link, image, file }
 
 enum ItemStatus { sent, pending, failed }
 
@@ -8,7 +8,7 @@ class HistoryItem {
   final String id;
   final ItemType type;
 
-  /// Text/link content, or the local file path for images.
+  /// Text/link content, or the local file path for images and files.
   final String data;
   final String label;
   final int ts;
