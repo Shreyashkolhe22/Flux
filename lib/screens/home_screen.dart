@@ -171,6 +171,16 @@ class _HomeScreenState extends State<HomeScreen> {
           textAlign: TextAlign.center,
           style: label(context, size: 11),
         ),
+        if (app.queuedCount > 0) ...[
+          const SizedBox(height: 18),
+          Text(
+            app.queuedCount == 1
+                ? '1 ITEM WAITING • SENDS WHEN LAPTOP IS BACK'
+                : '${app.queuedCount} ITEMS WAITING • SEND WHEN LAPTOP IS BACK',
+            textAlign: TextAlign.center,
+            style: label(context, color: c.red, size: 10),
+          ),
+        ],
         const Spacer(),
         PillButton(text: 'SCAN QR CODE', icon: Icons.qr_code_scanner, onTap: _scan),
         const SizedBox(height: 8),
@@ -448,7 +458,9 @@ class _RecentTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    item.status == ItemStatus.failed ? 'FAILED • TAP TO RETRY' : timeAgo(item.ts),
+                    item.status == ItemStatus.failed
+                        ? (item.auto ? 'WAITING FOR LAPTOP • WILL RETRY' : 'FAILED • TAP TO RETRY')
+                        : timeAgo(item.ts),
                     style: label(
                       context,
                       size: 10,

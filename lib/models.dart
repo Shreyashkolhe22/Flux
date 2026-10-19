@@ -14,6 +14,10 @@ class HistoryItem {
   final int ts;
   ItemStatus status;
 
+  /// True when the last attempt failed only because the laptop was unreachable:
+  /// the app retries these by itself once the laptop is back.
+  bool auto;
+
   HistoryItem({
     required this.id,
     required this.type,
@@ -21,6 +25,7 @@ class HistoryItem {
     required this.label,
     required this.ts,
     this.status = ItemStatus.pending,
+    this.auto = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -30,6 +35,7 @@ class HistoryItem {
         'label': label,
         'ts': ts,
         'status': status.name,
+        'auto': auto,
       };
 
   factory HistoryItem.fromJson(Map<String, dynamic> j) => HistoryItem(
@@ -39,6 +45,7 @@ class HistoryItem {
         label: j['label'] as String,
         ts: j['ts'] as int,
         status: ItemStatus.values.byName(j['status'] as String),
+        auto: j['auto'] as bool? ?? false,
       );
 
   static String encodeList(List<HistoryItem> l) =>

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -8,6 +9,7 @@ import 'package:uuid/uuid.dart';
 
 import 'api.dart';
 import 'models.dart';
+import 'network.dart';
 
 enum Link { unknown, checking, connected, offline }
 
@@ -15,6 +17,10 @@ enum Phase { idle, sending, sent, failed }
 
 const _maxImageBytes = 4 * 1024 * 1024; // server cap is 5 MB
 const _maxHistory = 50;
+const _autoRetryMaxAge = Duration(hours: 24);
+const _queueTick = Duration(seconds: 20);
+/// Every Nth tick also searches the whole subnet, in case the laptop got a new address.
+const _deepSearchEvery = 6;
 
 class AppState extends ChangeNotifier {
   SharedPreferences? _prefs;
@@ -40,6 +46,9 @@ class AppState extends ChangeNotifier {
   bool fromShare = false;
 
   bool _busy = false;
+  bool _flushing = false;
+  int _ticks = 0;
+  Timer? _queueTimer;
   final _uuid = const Uuid();
 
   Future<void> load() async {
@@ -62,7 +71,14 @@ class AppState extends ChangeNotifier {
     );
     loaded = true;
     notifyListeners();
+    _queueTimer ??= Timer.periodic(_queueTick, (_) => _tick());
     refreshConnection();
+  }
+
+  @override
+  void dispose() {
+    _queueTimer?.cancel();
+    super.dispose();
   }
 
   // ---- persistence ------------------------------------------------------
@@ -98,6 +114,7 @@ class AppState extends ChangeNotifier {
   // ---- pairing & connection --------------------------------------------
 
   Future<bool> pair(Pairing p) async {
+    await WifiBinder.bind();
     link = Link.checking;
     notifyListeners();
     for (final ip in p.ips) {
@@ -112,7 +129,7 @@ class AppState extends ChangeNotifier {
         );
         await _savePairing();
         link = Link.connected;
-    everConnected = true;
+        everConnected = true;
         await _detectNetwork();
         notifyListeners();
         return true;
@@ -144,12 +161,13 @@ class AppState extends ChangeNotifier {
         await _savePairing();
       }
       link = Link.connected;
-    everConnected = true;
+        everConnected = true;
     } else {
       link = Link.offline;
     }
     await _detectNetwork();
     notifyListeners();
+    if (link == Link.connected) unawaited(flushQueue());
   }
 
   Future<void> _detectNetwork() async {
@@ -227,21 +245,28 @@ class AppState extends ChangeNotifier {
         phaseMessage = item.type == ItemType.image
             ? 'Saved to Downloads/Flux on laptop.'
             : 'Copied to laptop clipboard.';
+        item.auto = false;
         link = Link.connected;
-    everConnected = true;
+        everConnected = true;
       case SendResult.badKey:
+        item.auto = false;
         _fail(item, 'Laptop key changed. Scan the QR again.');
       case SendResult.tooLarge:
+        item.auto = false;
         _fail(item, 'File is too large to send.');
       case SendResult.unreachable:
+        // Keep it and send it by itself when the laptop is back.
+        item.auto = true;
         link = Link.offline;
-        _fail(item, "Couldn't reach your laptop.");
+        _fail(item, "Couldn't reach your laptop.\nWill retry automatically when it's back.");
       case SendResult.error:
+        item.auto = false;
         _fail(item, "Couldn't send. Try again.");
     }
     await _saveHistory();
     _busy = false;
     notifyListeners();
+    if (item.status == ItemStatus.sent) unawaited(flushQueue());
   }
 
   void _fail(HistoryItem item, String msg) {
@@ -278,6 +303,79 @@ class AppState extends ChangeNotifier {
       }
     }
     return r;
+  }
+
+  // ---- automatic retry --------------------------------------------------
+
+  bool _isQueued(HistoryItem i) =>
+      i.status == ItemStatus.failed &&
+      i.auto &&
+      DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(i.ts)) < _autoRetryMaxAge;
+
+  int get queuedCount => history.where(_isQueued).length;
+
+  /// Runs every few seconds while something is waiting for the laptop.
+  Future<void> _tick() async {
+    final p = pairing;
+    if (p == null || !loaded || _busy || _flushing || queuedCount == 0) return;
+    _ticks++;
+
+    await WifiBinder.bind();
+    String? found;
+    for (final ip in {p.activeIp, ...p.ips}) {
+      if (await FluxApi.ping(ip, p.port, timeout: const Duration(milliseconds: 1200)) != null) {
+        found = ip;
+        break;
+      }
+    }
+    // Cheap checks first; now and then search the subnet in case the address changed.
+    if (found == null && _ticks % _deepSearchEvery == 0) {
+      found = await FluxApi.discover(p);
+    }
+    if (found == null) return;
+
+    if (found != p.activeIp) {
+      pairing = p.withIp(found);
+      await _savePairing();
+    }
+    link = Link.connected;
+        everConnected = true;
+    notifyListeners();
+    await flushQueue();
+  }
+
+  /// Sends every waiting item, oldest first, with no overlay. Stops at the first
+  /// item that still cannot reach the laptop.
+  Future<void> flushQueue() async {
+    if (_flushing || _busy || pairing == null) return;
+    final due = history.where(_isQueued).toList().reversed.toList();
+    if (due.isEmpty) return;
+    _flushing = true;
+    try {
+      for (final item in due) {
+        if (_busy) break; // the user started their own send; let it finish first
+        item.status = ItemStatus.pending;
+        notifyListeners();
+        final r = await _attempt(item);
+        if (r == SendResult.ok) {
+          item.status = ItemStatus.sent;
+          item.auto = false;
+          link = Link.connected;
+          everConnected = true;
+        } else {
+          item.status = ItemStatus.failed;
+          item.auto = r == SendResult.unreachable;
+          if (r == SendResult.unreachable) {
+            link = Link.offline;
+            break;
+          }
+        }
+      }
+    } finally {
+      _flushing = false;
+      await _saveHistory();
+      notifyListeners();
+    }
   }
 
   /// Compresses to JPEG, lowering quality until it fits the size cap.

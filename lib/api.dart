@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'models.dart';
+import 'network.dart';
 
 enum SendResult { ok, badKey, tooLarge, unreachable, error }
 
@@ -36,6 +37,7 @@ class FluxApi {
     required String data,
     String? mime,
   }) async {
+    await WifiBinder.bind();
     try {
       final res = await http
           .post(
@@ -97,6 +99,7 @@ class FluxApi {
   /// Finds the paired laptop. Order: last good IP, other IPs from the QR,
   /// then a /24 sweep of every local subnet. Returns the working IP or null.
   static Future<String?> discover(Pairing p) async {
+    await WifiBinder.bind();
     final known = <String>{p.activeIp, ...p.ips};
     for (final ip in known) {
       if (await ping(ip, p.port) != null) return ip;
