@@ -7,7 +7,6 @@ landing/
   index.html     content and structure
   styles.css     theme tokens (same black / white / red as the app), layout, light + dark
   main.js        dot-matrix lettering, theme switch, scroll reveal, live download links
-  constellation.js  animated grid background (pointer-reactive canvas, follows the theme)
   assets/        app screenshots, widget, logo, favicon, social image
   vercel.json    caching and security headers
 ```
@@ -59,6 +58,3 @@ to your full address, for example `https://your-site.vercel.app/assets/og.png`, 
   so there is no font file for it.
 - Respects the visitor's light or dark setting, with a System / Light / Dark switch.
 - Honours "reduce motion".
-- The background is a canvas grid of connected dots that the cursor pushes away. It is drawn by `constellation.js`,
-  uses the page colours (the highlight is the red from the theme; set `ACCENT_OVERRIDE` at the top of the file to change it),
-  pauses when the tab is hidden, and shows a still grid if the visitor prefers reduced motion.
