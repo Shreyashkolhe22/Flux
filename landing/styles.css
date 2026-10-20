@@ -97,7 +97,6 @@ h3 { font-size: 20px; margin-bottom: 8px; }
 .phone { position: relative; border-radius: 13% / 6%; border: 7px solid #1c1c1c; background: #000; box-shadow: var(--shadow); overflow: hidden; aspect-ratio: 540 / 1200; }
 .phone img { width: 100%; height: 100%; object-fit: cover; }
 .phone-main { width: min(78%, 330px); margin-inline: auto; }
-.float { position: absolute; width: 34%; left: -2%; bottom: 7%; filter: drop-shadow(0 22px 34px rgba(0, 0, 0, 0.55)); animation: bob 6s ease-in-out infinite; }
 .toast { position: absolute; right: -6%; top: 0; width: 78%; display: flex; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #262626; color: #fff; box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5); border: 1px solid #3a3a3a; font-size: 13px; line-height: 1.4; animation: bob 7s ease-in-out infinite reverse; }
 .toast-ico img { border-radius: 8px; }
 .toast-body { display: flex; flex-direction: column; min-width: 0; }
@@ -220,7 +219,6 @@ details p { margin: 0 0 22px; color: var(--muted); max-width: 52em; }
   .section { padding-top: 84px; }
   .guide > li { grid-template-columns: 1fr; gap: 14px; }
   .toast { right: 0; width: 92%; }
-  .float { left: 0; }
   .flow { padding-inline: 4px; }
   .node { width: 72px; height: 72px; }
   .node svg { width: 22px; height: 22px; }
