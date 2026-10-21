@@ -33,7 +33,7 @@
       <nav class="nav-links" aria-label="Sections">
         <a href="#how">How it works</a>
         <a href="#features">Features</a>
-        <a href="#setup">Setup</a>
+        <a href="#setup" data-open-guide>Setup</a>
         <a href="#faq">FAQ</a>
       </nav>
       <div class="nav-right">
@@ -51,7 +51,7 @@
     <nav aria-label="Menu">
       <a href="#how">How it works</a>
       <a href="#features">Features</a>
-      <a href="#setup">Setup</a>
+      <a href="#setup" data-open-guide>Setup</a>
       <a href="#faq">FAQ</a>
       <a href="#download" class="menu-dl">Download</a>
     </nav>
@@ -194,82 +194,17 @@
     <section class="section wrap" id="setup">
       <header class="sec-head reveal">
         <p class="eyebrow">SETUP GUIDE</p>
-        <h2>From download to first send.</h2>
-        <p class="sub">About five minutes. You need a Windows laptop and an Android phone.</p>
+        <h2>Set up in five minutes.</h2>
+        <p class="sub">You need a Windows laptop and an Android phone. After this, sending is a tap.</p>
       </header>
 
-      <ol class="guide">
-        <li class="reveal">
-          <span class="dots gnum" data-text="1" data-dot="6" aria-hidden="true"></span>
-          <div>
-            <h3>Install Flux on your laptop</h3>
-            <ol>
-              <li><a href="#download" data-dl="exe">Download the Windows installer</a> and double-click it.</li>
-              <li>Windows may say <b>"Windows protected your PC"</b> because the installer is not code-signed. Click <b>More info</b>, then <b>Run anyway</b>.</li>
-              <li>Click <b>Yes</b> when asked for permission. This lets Flux open one firewall port for your local network.</li>
-              <li>Flux starts, a window with a <b>QR code</b> appears, and a small Flux icon sits in the tray at the bottom right. Leave the QR window open.</li>
-            </ol>
-          </div>
-        </li>
-        <li class="reveal">
-          <span class="dots gnum" data-text="2" data-dot="6" aria-hidden="true"></span>
-          <div>
-            <h3>Install Flux on your phone</h3>
-            <ol>
-              <li><a href="#download" data-dl="apk">Download the Android app</a> on your phone, or send the file to it.</li>
-              <li>Tap the file. If Android asks, allow <b>Install unknown apps</b> for your browser or file manager, then tap <b>Install</b>.</li>
-              <li>Open <b>Flux</b>.</li>
-            </ol>
-          </div>
-        </li>
-        <li class="reveal">
-          <span class="dots gnum" data-text="3" data-dot="6" aria-hidden="true"></span>
-          <div>
-            <h3>Join the same network</h3>
-            <ol>
-              <li><b>Easiest:</b> turn on your phone hotspot and connect the laptop to it. It works with no internet at all.</li>
-              <li><b>Or:</b> connect both devices to the same home Wi-Fi.</li>
-            </ol>
-            <p class="callout"><b>Heads up:</b> some office, school and guest networks stop devices talking to each other. If pairing fails there, use your phone hotspot instead.</p>
-          </div>
-        </li>
-        <li class="reveal">
-          <span class="dots gnum" data-text="4" data-dot="6" aria-hidden="true"></span>
-          <div>
-            <h3>Pair with the QR code</h3>
-            <ol>
-              <li>In the Flux app, tap <b>Scan QR code</b> and allow the camera.</li>
-              <li>Point it at the QR code on your laptop screen.</li>
-              <li>The app shows a green <b>CONNECTED</b> and your laptop's name. You only do this once.</li>
-              <li>Lost the QR window? Click the Flux icon in the laptop tray to show it again.</li>
-            </ol>
-          </div>
-        </li>
-        <li class="reveal">
-          <span class="dots gnum" data-text="5" data-dot="6" aria-hidden="true"></span>
-          <div>
-            <h3>Send something</h3>
-            <ol>
-              <li><b>Type or paste</b> in the box and tap the red arrow.</li>
-              <li><b>Share</b> from any app: tap Share, then Flux.</li>
-              <li><b>Image</b>, <b>Camera</b> or <b>File</b>: pick it and it is sent.</li>
-              <li><b>Widget or tile:</b> in Flux open Settings, then Shortcuts, and add them. Copy anything, tap once.</li>
-            </ol>
-            <p>On the laptop you get a notification. Text and links are already in your clipboard, so just press <kbd>Ctrl</kbd> + <kbd>V</kbd>. Images and files are in <code>Downloads\Flux</code>. Click the notification to show the file.</p>
-          </div>
-        </li>
-      </ol>
-
-      <div class="trouble reveal">
-        <h3>If something does not work</h3>
-        <details><summary>The phone says NO SIGNAL or cannot find the laptop</summary>
-          <p>Both devices must be on the same network and Flux must be running on the laptop (look for the tray icon). Try the phone hotspot. If you installed from source and not with the installer, the firewall rule may be missing. See the GitHub page for the one command.</p></details>
-        <details><summary>It works in my phone's browser but not in the app</summary>
-          <p>Turn mobile data off on the phone and try again. Flux sends over Wi-Fi, but some phones route oddly on a Wi-Fi without internet.</p></details>
-        <details><summary>I changed networks, or the key was reset</summary>
-          <p>In the app open <b>Devices</b>, tap <b>Forget</b>, then scan the QR code again. To get a new key on the laptop, right-click the tray icon and choose <b>Reset pairing key</b>.</p></details>
-        <details><summary>Port 3000 is in use</summary>
-          <p>Another program is using the port Flux needs. Close it and start Flux again.</p></details>
+      <div class="setup-teaser reveal">
+        <ul class="setup-steps">
+          <li><span class="dots gnum" data-text="1" data-dot="6" aria-hidden="true"></span><div><b>Install on your laptop</b><span>Run the Windows installer. A QR code opens.</span></div></li>
+          <li><span class="dots gnum" data-text="2" data-dot="6" aria-hidden="true"></span><div><b>Install on your phone</b><span>Install the app, then tap Scan QR code.</span></div></li>
+          <li><span class="dots gnum" data-text="3" data-dot="6" aria-hidden="true"></span><div><b>Send something</b><span>Same Wi-Fi or hotspot. Then Ctrl + V on the laptop.</span></div></li>
+        </ul>
+        <button type="button" class="btn btn-red" data-open-guide>Open the full setup guide</button>
       </div>
     </section>
 
@@ -317,6 +252,95 @@
     </section>
   </main>
 
+  <!-- Setup guide pop-up -->
+  <dialog class="modal" id="guideModal" aria-labelledby="guideTitle">
+    <div class="modal-bar">
+      <div>
+        <p class="eyebrow">SETUP GUIDE</p>
+        <h2 id="guideTitle">From download to first send.</h2>
+      </div>
+      <button type="button" class="modal-close" data-close-guide aria-label="Close setup guide"><span></span><span></span></button>
+    </div>
+    <div class="modal-body">
+      <p class="sub">About five minutes. You need a Windows laptop and an Android phone.</p>
+      <ol class="guide">
+        <li>
+          <span class="dots gnum" data-text="1" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Install Flux on your laptop</h3>
+            <ol>
+              <li><a href="#download" data-dl="exe">Download the Windows installer</a> and double-click it.</li>
+              <li>Windows may say <b>"Windows protected your PC"</b> because the installer is not code-signed. Click <b>More info</b>, then <b>Run anyway</b>.</li>
+              <li>Click <b>Yes</b> when asked for permission. This lets Flux open one firewall port for your local network.</li>
+              <li>Flux starts, a window with a <b>QR code</b> appears, and a small Flux icon sits in the tray at the bottom right. Leave the QR window open.</li>
+            </ol>
+          </div>
+        </li>
+        <li>
+          <span class="dots gnum" data-text="2" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Install Flux on your phone</h3>
+            <ol>
+              <li><a href="#download" data-dl="apk">Download the Android app</a> on your phone, or send the file to it.</li>
+              <li>Tap the file. If Android asks, allow <b>Install unknown apps</b> for your browser or file manager, then tap <b>Install</b>.</li>
+              <li>Open <b>Flux</b>.</li>
+            </ol>
+          </div>
+        </li>
+        <li>
+          <span class="dots gnum" data-text="3" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Join the same network</h3>
+            <ol>
+              <li><b>Easiest:</b> turn on your phone hotspot and connect the laptop to it. It works with no internet at all.</li>
+              <li><b>Or:</b> connect both devices to the same home Wi-Fi.</li>
+            </ol>
+            <p class="callout"><b>Heads up:</b> some office, school and guest networks stop devices talking to each other. If pairing fails there, use your phone hotspot instead.</p>
+          </div>
+        </li>
+        <li>
+          <span class="dots gnum" data-text="4" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Pair with the QR code</h3>
+            <ol>
+              <li>In the Flux app, tap <b>Scan QR code</b> and allow the camera.</li>
+              <li>Point it at the QR code on your laptop screen.</li>
+              <li>The app shows a green <b>CONNECTED</b> and your laptop's name. You only do this once.</li>
+              <li>Lost the QR window? Click the Flux icon in the laptop tray to show it again.</li>
+            </ol>
+          </div>
+        </li>
+        <li>
+          <span class="dots gnum" data-text="5" data-dot="6" aria-hidden="true"></span>
+          <div>
+            <h3>Send something</h3>
+            <ol>
+              <li><b>Type or paste</b> in the box and tap the red arrow.</li>
+              <li><b>Share</b> from any app: tap Share, then Flux.</li>
+              <li><b>Image</b>, <b>Camera</b> or <b>File</b>: pick it and it is sent.</li>
+              <li><b>Widget or tile:</b> in Flux open Settings, then Shortcuts, and add them. Copy anything, tap once.</li>
+            </ol>
+            <p>On the laptop you get a notification. Text and links are already in your clipboard, so just press <kbd>Ctrl</kbd> + <kbd>V</kbd>. Images and files are in <code>Downloads\Flux</code>. Click the notification to show the file.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="trouble">
+        <h3>If something does not work</h3>
+        <details><summary>The phone says NO SIGNAL or cannot find the laptop</summary>
+          <p>Both devices must be on the same network and Flux must be running on the laptop (look for the tray icon). Try the phone hotspot. If you installed from source and not with the installer, the firewall rule may be missing. See the GitHub page for the one command.</p></details>
+        <details><summary>It works in my phone's browser but not in the app</summary>
+          <p>Turn mobile data off on the phone and try again. Flux sends over Wi-Fi, but some phones route oddly on a Wi-Fi without internet.</p></details>
+        <details><summary>I changed networks, or the key was reset</summary>
+          <p>In the app open <b>Devices</b>, tap <b>Forget</b>, then scan the QR code again. To get a new key on the laptop, right-click the tray icon and choose <b>Reset pairing key</b>.</p></details>
+        <details><summary>Port 3000 is in use</summary>
+          <p>Another program is using the port Flux needs. Close it and start Flux again.</p></details>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn btn-line" data-close-guide>Close</button></div>
+    </div>
+  </dialog>
+
+
   <footer class="hwf" id="footer">
     <canvas aria-hidden="true"></canvas>
     <span class="hwf-sr">Flux</span>
@@ -329,7 +353,7 @@
         <h3>Product</h3>
         <ul>
           <li><a href="#features">Features</a></li>
-          <li><a href="#setup">Setup</a></li>
+          <li><a href="#setup" data-open-guide>Setup</a></li>
           <li><a href="#download">Download</a></li>
           <li><a href="#faq">Questions</a></li>
         </ul>

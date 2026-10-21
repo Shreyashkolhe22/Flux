@@ -65,3 +65,4 @@ to your full address, for example `https://your-site.vercel.app/assets/og.png`, 
 - Built mobile-first friendly: on screens up to 980 px the section links move into a full-screen menu (button at the top right),
   the hero buttons become equal full-width buttons, cards tighten up, and the screenshot strip bleeds to the screen edge.
   Checked for horizontal overflow from 280 to 1280 px wide. Hover effects are switched off on touch screens.
+- The long setup guide is not in the page: it lives in a pop-up (<dialog id="guideModal">) opened by the "Setup" link in the nav bar, the phone menu and the footer, and by the button in the Setup section. It closes with the X, the Close button, a click outside, or Esc, and is a full-screen sheet on phones. Opening `#guide` in the address also shows it.

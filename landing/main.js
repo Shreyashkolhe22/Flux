@@ -185,4 +185,36 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
     window.addEventListener("resize", function () { if (window.innerWidth > 980) setMenu(false); });
   }
+
+  /* ---------- setup guide pop-up ---------- */
+  var guide = document.getElementById("guideModal");
+  function openGuide() {
+    if (!guide) return;
+    if (typeof setMenu === "function") setMenu(false);
+    if (typeof guide.showModal === "function") { if (!guide.open) guide.showModal(); } else { guide.setAttribute("open", ""); }
+    document.documentElement.classList.add("modal-open");
+    var body = guide.querySelector(".modal-body");
+    if (body) body.scrollTop = 0;
+    // focus the panel itself, not the close button, so no focus ring flashes on touch
+    guide.setAttribute("tabindex", "-1");
+    guide.focus({ preventScroll: true });
+  }
+  function closeGuide() {
+    if (!guide) return;
+    if (typeof guide.close === "function") { if (guide.open) guide.close(); } else { guide.removeAttribute("open"); }
+    document.documentElement.classList.remove("modal-open");
+  }
+  if (guide) {
+    document.querySelectorAll("[data-open-guide]").forEach(function (el) {
+      el.addEventListener("click", function (e) { e.preventDefault(); openGuide(); });
+    });
+    guide.addEventListener("click", function (e) {
+      // the dim area outside the panel, the close buttons, and in-page links all close it
+      if (e.target === guide || e.target.closest("[data-close-guide]") || e.target.closest("a[href^=\"#\"]")) closeGuide();
+    });
+    guide.addEventListener("close", function () { document.documentElement.classList.remove("modal-open"); });
+    var wantsGuide = function () { return /^#(setup-guide|guide)$/.test(location.hash); };
+    if (wantsGuide()) openGuide();
+    window.addEventListener("hashchange", function () { if (wantsGuide()) openGuide(); });
+  }
 })();
