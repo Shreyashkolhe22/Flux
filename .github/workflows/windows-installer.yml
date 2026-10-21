@@ -1,0 +1,41 @@
+name: Windows installer
+
+# Builds Flux-Setup-x.y.z.exe on GitHub's servers and attaches it to an existing release.
+# Use this when uploading the 100 MB installer from your own computer fails.
+#
+#   Actions tab -> "Windows installer" -> Run workflow -> tag: v1.0.0
+#
+# The release for that tag must already exist (create it on the Releases page first).
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to attach the installer to, for example v1.0.0
+        required: true
+        default: v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the installer
+        working-directory: laptop
+        run: |
+          npm install --no-audit --no-fund
+          npm run dist
+      - name: Show what was built
+        shell: bash
+        run: ls -la laptop/dist/*.exe
+      - name: Attach to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          files: laptop/dist/Flux-Setup-*.exe
+          fail_on_unmatched_files: true
