@@ -86,42 +86,24 @@ h3 { font-size: 20px; margin-bottom: 8px; }
 .note-line { text-align: center; font: 400 12px var(--mono); letter-spacing: 0.08em; color: var(--muted); margin: 34px 0 0; }
 .note-line a { color: var(--text); text-underline-offset: 4px; }
 
-/* ---------- hero: scroll-driven tunnel ---------- */
-.tunnel { position: relative; height: 380vh; height: 380svh; }
-.tunnel-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; place-items: center; padding-top: 68px; }
-.tunnel-view { position: absolute; inset: 0; perspective: 1200px; perspective-origin: 50% 50%; pointer-events: none; }
-.tunnel-world { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
-.t-card { position: absolute; left: 50%; top: 50%; will-change: transform, opacity; backface-visibility: hidden; }
-.t-card .phone { width: var(--cw); margin: 0; border-width: 5px; border-color: var(--border); box-shadow: 0 0 0 1px var(--border), var(--shadow); }
-.t-chip { width: var(--cw); padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); font-size: 13px; line-height: 1.4; }
-.t-chip small { display: block; font: 400 10px var(--mono); letter-spacing: 0.14em; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
-.t-chip b { font-weight: 500; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.t-chip .bar { height: 3px; border-radius: 2px; background: var(--border); margin-top: 10px; overflow: hidden; }
-.t-chip .bar::after { content: ""; display: block; height: 100%; width: 72%; background: var(--red); }
-.t-card .toast { width: var(--cw); }
-.tunnel-copy { position: relative; z-index: 2; width: min(92%, 860px); text-align: center; display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; }
-.tunnel-copy h1 { font-size: clamp(38px, 7.4vw, 92px); font-weight: 300; letter-spacing: -0.035em; line-height: 1.04; text-wrap: balance; }
-.tunnel-copy h1 em { font-style: normal; font-weight: 500; }
-.tunnel-copy .lead { margin-inline: auto; text-align: center; }
-.tunnel-copy .cta { justify-content: center; }
-.tunnel-end { position: absolute; z-index: 2; inset: 68px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; pointer-events: none; padding: 0 18px; }
-.tunnel-end-title { font-size: clamp(34px, 6vw, 76px); font-weight: 300; letter-spacing: -0.03em; line-height: 1.08; margin: 0; }
-.tunnel-hint { position: absolute; z-index: 2; bottom: 26px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; font: 400 10px var(--mono); letter-spacing: 0.22em; color: var(--muted); }
-.tunnel-hint i { width: 1px; height: 30px; background: linear-gradient(var(--muted), transparent); animation: hint 1.8s ease-in-out infinite; transform-origin: top; }
-@keyframes hint { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: 40px; padding: 72px 0 56px; min-height: calc(100vh - 68px); }
+.static .hero { min-height: 820px; }
+.hero-mark { margin: 0; }
+.dots-hero { width: min(100%, 560px); }
+.cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+
+.hero-visual { position: relative; justify-self: center; width: min(100%, 460px); padding: 70px 0 10px; }
 .phone { position: relative; border-radius: 13% / 6%; border: 7px solid #1c1c1c; background: #000; box-shadow: var(--shadow); overflow: hidden; aspect-ratio: 540 / 1200; }
 .phone img { width: 100%; height: 100%; object-fit: cover; }
-.toast { display: flex; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #262626; color: #fff; box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5); border: 1px solid #3a3a3a; font-size: 13px; line-height: 1.4; }
+.phone-main { width: min(78%, 330px); margin-inline: auto; }
+.toast { position: absolute; right: -6%; top: 0; width: 78%; display: flex; gap: 12px; padding: 14px 16px; border-radius: 16px; background: #262626; color: #fff; box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5); border: 1px solid #3a3a3a; font-size: 13px; line-height: 1.4; animation: bob 7s ease-in-out infinite reverse; }
 .toast-ico img { border-radius: 8px; }
 .toast-body { display: flex; flex-direction: column; min-width: 0; }
 .toast-body b { font-weight: 600; font-size: 13px; }
 .toast-body span { color: #cfcfcf; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .toast-body .toast-sub { color: #fff; font-size: 12px; margin-top: 2px; }
-.tunnel-reduced { height: auto; }
-.tunnel-reduced .tunnel-stage { position: relative; min-height: 100vh; min-height: 100svh; }
-.tunnel-reduced .tunnel-hint, .tunnel-reduced .tunnel-end { display: none; }
-
-
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
 /* ---------- ticker ---------- */
 .ticker { border-block: 1px dashed var(--border); overflow: hidden; padding: 16px 0; margin: 20px 0 0; }
@@ -276,6 +258,8 @@ h2, .lead, .sub { text-wrap: balance; }
   .seg-lg button { flex: 1; padding: 13px 10px; font-size: 12px; }
   html.menu-open, html.menu-open body { overflow: hidden; }
 
+  .hero { grid-template-columns: 1fr; min-height: 0; padding: 40px 0 36px; gap: 48px; }
+  .hero-visual { width: min(100%, 420px); }
   .section { padding-top: 96px; }
   .grid, .dl-grid { grid-template-columns: repeat(2, 1fr); }
   .card-wide { grid-column: span 2; }
@@ -296,11 +280,14 @@ h2, .lead, .sub { text-wrap: balance; }
   .menu { inset: 60px 0 0 0; }
   .section { padding-top: 76px; }
   .sec-head { margin-bottom: 36px; }
+  .hero { padding-top: 28px; gap: 40px; }
   .lead { font-size: 17px; margin-top: 20px; }
   .cta { flex-direction: column; gap: 12px; margin-top: 28px; }
   .cta .btn { width: 100%; }
   .micro { margin-top: 18px; line-height: 1.8; }
-  .tunnel-hint { bottom: 16px; }
+  .hero-visual { padding-top: 78px; }
+  .phone-main { width: min(74%, 290px); }
+  .toast { right: 0; width: 94%; }
   .step, .card, .dl { padding: 24px; border-radius: 24px; }
   .step .num { width: 60px; margin-bottom: 20px; }
   .grid, .steps, .dl-grid { gap: 14px; }

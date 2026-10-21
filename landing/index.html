@@ -64,14 +64,12 @@
 
   <main id="main">
     <!-- HERO -->
-    <section class="tunnel" id="tunnel" aria-label="Flux">
-      <div class="tunnel-stage">
-        <div class="tunnel-view" aria-hidden="true"><div class="tunnel-world" id="tunnelWorld"></div></div>
-        <div class="tunnel-copy" id="tunnelCopy">
-          <p class="eyebrow">LOCAL SHARING. NO CLOUD.</p>
-          <h1>Copy on your phone.<br><em>Paste on your laptop.</em></h1>
-          <p class="lead">Text, links, images and files travel straight over your own Wi-Fi. Nothing is uploaded, nothing is stored.</p>
-          <div class="cta">
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">LOCAL SHARING. NO CLOUD.</p>
+        <h1 class="hero-mark reveal" aria-label="FLUX."><span class="dots dots-hero" data-text="FLUX." data-thin aria-hidden="true"></span></h1>
+        <p class="lead reveal">Copy on your phone. <strong>Paste on your laptop.</strong><br>Text, links, images and files travel straight over your own network. No account, no cloud, no internet.</p>
+        <div class="cta reveal">
           <a class="btn btn-red" href="#download" data-dl="apk">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M17.6 9.5l1.7-3a.4.4 0 0 0-.7-.4l-1.7 3A10.3 10.3 0 0 0 12 8.2c-1.6 0-3.1.4-4.9 1l-1.7-3a.4.4 0 1 0-.7.4l1.7 3A9.6 9.6 0 0 0 2 17h20a9.6 9.6 0 0 0-4.4-7.5zM7.6 14.6a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8zm8.8 0a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8z"/></svg>
             Android app
@@ -81,13 +79,19 @@
             Windows installer
           </a>
         </div>
-          <p class="micro"><span data-version>v1.0</span> · Android 7+ · Windows 10 / 11</p>
+        <p class="micro reveal"><span data-version>v1.0</span> · Android 7+ · Windows 10 / 11</p>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone phone-main"><img src="assets/app-home.png" alt="" width="540" height="1200"></div>
+        <div class="toast">
+          <div class="toast-ico"><img src="assets/favicon.png" alt="" width="28" height="28"></div>
+          <div class="toast-body">
+            <b>Received from phone: link</b>
+            <span>"https://github.com"</span>
+            <span class="toast-sub">Copied. Ready to paste (Ctrl+V).</span>
+          </div>
         </div>
-        <div class="tunnel-end" id="tunnelEnd" aria-hidden="true">
-          <p class="eyebrow">YOUR NETWORK. YOUR FILES.</p>
-          <p class="tunnel-end-title">Sent in a second.<br>Stored nowhere.</p>
-        </div>
-        <div class="tunnel-hint" id="tunnelHint" aria-hidden="true"><span>SCROLL TO EXPLORE</span><i></i></div>
       </div>
     </section>
 
@@ -368,7 +372,6 @@
     </div>
   </footer>
 
-  <script src="tunnel.js" defer></script>
   <script src="main.js" defer></script>
   <script src="footer.js" defer></script>
 </body>
