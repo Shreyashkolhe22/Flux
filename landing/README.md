@@ -6,6 +6,7 @@ A static site (plain HTML, CSS and JS, no build step) for the Flux app.
 landing/
   index.html     content and structure
   styles.css     theme tokens (same black / white / red as the app), layout, light + dark
+  tunnel.js      hero: scroll-driven 3D tunnel of cards (sticky stage, spring-smoothed, pointer tilt)
   main.js        dot-matrix lettering, theme switch, scroll reveal, live download links
   footer.js     halftone wordmark footer (giant dotted word that the pointer parts)
   assets/        app screenshots, widget, logo, favicon, social image
