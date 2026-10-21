@@ -169,4 +169,20 @@
       }
     })
     .catch(function () { /* offline or no release yet: keep the default links */ });
+
+  /* ---------- mobile menu ---------- */
+  var menuBtn = document.getElementById("menuBtn"), menu = document.getElementById("menu");
+  function setMenu(open) {
+    if (!menuBtn || !menu) return;
+    menu.hidden = !open;
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    document.documentElement.classList.toggle("menu-open", open);
+  }
+  if (menuBtn && menu) {
+    menuBtn.addEventListener("click", function () { setMenu(menu.hidden); });
+    menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+    window.addEventListener("resize", function () { if (window.innerWidth > 980) setMenu(false); });
+  }
 })();

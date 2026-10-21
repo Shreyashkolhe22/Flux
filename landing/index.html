@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Flux. Send anything from your phone to your laptop</title>
   <meta name="description" content="Flux sends text, links, images and files from your Android phone to your Windows laptop over your local network. No cloud, no account, no internet.">
   <meta name="theme-color" content="#000000">
@@ -43,9 +43,24 @@
           <button type="button" data-set-theme="dark" aria-pressed="false">Dark</button>
         </div>
         <a class="btn btn-red btn-sm" href="#download">Download</a>
+        <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
       </div>
     </div>
   </header>
+  <div class="menu" id="menu" hidden>
+    <nav aria-label="Menu">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#setup">Setup</a>
+      <a href="#faq">FAQ</a>
+      <a href="#download" class="menu-dl">Download</a>
+    </nav>
+    <div class="seg seg-lg" role="group" aria-label="Theme">
+      <button type="button" data-set-theme="system" aria-pressed="true">System</button>
+      <button type="button" data-set-theme="light" aria-pressed="false">Light</button>
+      <button type="button" data-set-theme="dark" aria-pressed="false">Dark</button>
+    </div>
+  </div>
 
   <main id="main">
     <!-- HERO -->

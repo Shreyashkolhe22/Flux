@@ -62,3 +62,6 @@ to your full address, for example `https://your-site.vercel.app/assets/og.png`, 
 - The footer prints the word `flux.` as halftone dots (`footer.js`). Move the pointer over it and the dots part and warm in
   colour; click to send a ring through the word. Settings (word, dot gap, push radius, crop, grain) are at the top of the file.
   Links and text are plain HTML in the `<footer id="footer">` block of `index.html`.
+- Built mobile-first friendly: on screens up to 980 px the section links move into a full-screen menu (button at the top right),
+  the hero buttons become equal full-width buttons, cards tighten up, and the screenshot strip bleeds to the screen edge.
+  Checked for horizontal overflow from 280 to 1280 px wide. Hover effects are switched off on touch screens.
